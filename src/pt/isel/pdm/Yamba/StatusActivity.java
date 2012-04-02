@@ -110,9 +110,9 @@ public class StatusActivity extends Activity
 	private Twitter getTwitter() {
 		if (twitter == null) {
 			Log.d(TAG, "new Twitter");
-			String user = prefs.getString("user", "pdmstudent");
-			String pass = prefs.getString("pass", "");
-			String url = prefs.getString("url", "");
+			String user = prefs.getString("user", "pdmgrupo06");
+			String pass = prefs.getString("pass", "1p4ssw0rd");
+			String url = prefs.getString("url", "http://yamba.marakana.com/api");
 			twitter = new Twitter(user, pass);
 			twitter.setAPIRootUrl(url);
 		}
