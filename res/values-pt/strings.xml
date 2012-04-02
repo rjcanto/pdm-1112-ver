@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="prefs_name">Preferências Yamba</string>
     <string name="titleStatus">Atualização de Estado</string>
     <string name="hintText">Escreva o estado em 140 carateres</string>
     <string name="buttonUpdate">Enviar</string>
     <string name="buttonBusy">A ser enviado</string>
+    <string name="failMessage">Falha de atualização.\nError=%s</string>
+    <string name="terminate">Sair</string>
+    <string name="userTitle">Utilizador</string>
+    <string name="userSum">Nome do utilizador</string>
+    <string name="passTitle">Palavra-passe</string>
+    <string name="passSum">A palavra-passe</string>
+    <string name="urlTitle">Url</string>
+    <string name="urlSum">Url base do serviço </string>
+    <string name="prefs">Definições</string>
 </resources>
