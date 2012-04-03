@@ -8,6 +8,8 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,10 +20,13 @@ import android.widget.*;
 public class StatusActivity extends Activity 
                  implements OnClickListener, OnSharedPreferenceChangeListener {
 	private static final String TAG = "PDM";
-	private Button submit;
-	private EditText text;
-	private Twitter twitter;
-	private SharedPreferences prefs;
+	private static final int MAX_CHARS = 140 ;
+	private Button _submit;
+	private EditText _text;
+	private Twitter _twitter;
+	private SharedPreferences _prefs;
+	private TextView _availChars;
+	private int _nAvailChars;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -29,15 +34,38 @@ public class StatusActivity extends Activity
 		Log.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		submit = (Button) findViewById(R.id.buttonUpdate);
-		submit.setOnClickListener(this);
+		_submit = (Button) findViewById(R.id.buttonUpdate);
+		_submit.setOnClickListener(this);
 		App app = (App) getApplication();
 		if (app.lastSubmit != null && !app.lastSubmit.isEnabled())
 			disableSubmit();
-		app.lastSubmit = submit;
-		text = (EditText) findViewById(R.id.editText);
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		prefs.registerOnSharedPreferenceChangeListener(this);
+		app.lastSubmit = _submit;
+		_text = (EditText) findViewById(R.id.editText);
+		_text.addTextChangedListener(new TextWatcher() {
+			
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				_availChars.setText(String.valueOf(MAX_CHARS-s.length()));
+				
+			}
+		});
+		_prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		_prefs.registerOnSharedPreferenceChangeListener(this);
+		_availChars = (TextView) findViewById(R.id.availChars);
+		_availChars.setText(String.valueOf(MAX_CHARS));
+		_nAvailChars = MAX_CHARS ;
+		
 	}
 	
 	/** Called by submit button */
@@ -45,7 +73,7 @@ public class StatusActivity extends Activity
 		Log.d(TAG, "onClick");
 		disableSubmit();
 		// Update status and enable submit in background  
-		new UpdateStatusTask().execute(text.getText().toString());
+		new UpdateStatusTask().execute(_text.getText().toString());
 	}
 
 	/** Initialize options menu */
@@ -72,7 +100,7 @@ public class StatusActivity extends Activity
 	/** Invalidates the twitter when changing preferences */
 	public void onSharedPreferenceChanged(SharedPreferences sp,	String key) {
 		Log.d(TAG,"onPrefsChanged");
-		twitter = null;
+		_twitter = null;
 	}
 
 	// UTILITIES 
@@ -95,8 +123,15 @@ public class StatusActivity extends Activity
 		}
 		protected void onPostExecute(Void res) {
 			Log.d(TAG, "onPostExecute");
+			
 			if (error!=null)
-				showToast(getString(R.string.failMessage,error)); 
+				showToast(getString(R.string.failMessage,error));
+			else {
+				showToast(getString(R.string.successMessage));
+				_text.setText("");
+				_availChars.setText(String.valueOf(MAX_CHARS)) ;
+				_nAvailChars = MAX_CHARS ;
+			}
 			enableSubmit();
 		}
 	}
@@ -108,15 +143,15 @@ public class StatusActivity extends Activity
 	
 	/** Return the twitter object using shared preferences */ 
 	private Twitter getTwitter() {
-		if (twitter == null) {
+		if (_twitter == null) {
 			Log.d(TAG, "new Twitter");
-			String user = prefs.getString("user", "pdmgrupo06");
-			String pass = prefs.getString("pass", "1p4ssw0rd");
-			String url = prefs.getString("url", "http://yamba.marakana.com/api");
-			twitter = new Twitter(user, pass);
-			twitter.setAPIRootUrl(url);
+			String user = _prefs.getString("user", "pdmgrupo06");
+			String pass = _prefs.getString("pass", "1p4ssw0rd");
+			String url = _prefs.getString("url", "http://yamba.marakana.com/api");
+			_twitter = new Twitter(user, pass);
+			_twitter.setAPIRootUrl(url);
 		}
-		return twitter;
+		return _twitter;
 	}
 
 	/** Enable submit button of last activity */
@@ -128,7 +163,7 @@ public class StatusActivity extends Activity
 
 	/** Disable submit button of this activity */
 	private void disableSubmit() {
-		submit.setEnabled(false);
-		submit.setText(R.string.buttonBusy);
+		_submit.setEnabled(false);
+		_submit.setText(R.string.buttonBusy);
 	}
 }

@@ -8,6 +8,7 @@
     <string name="buttonUpdate">Submit</string>
     <string name="buttonBusy">Updating</string>
     <string name="failMessage">Update failed.\nError=%s</string>
+    <string name="successMessage">Update sent.</string>
     <string name="terminate">Exit</string>
     <string name="userTitle">User name</string>
     <string name="userSum">Name of the user</string>
@@ -17,5 +18,5 @@
     <string name="urlSum">Site base url</string>
     <string name="prefs">Settings</string>
     <string name="text">Settings</string>
-    <string name="textViewAvailChars">Available Characters:</string>
+    <string name="textViewAvailChars">Available Characters: </string>
 </resources>
