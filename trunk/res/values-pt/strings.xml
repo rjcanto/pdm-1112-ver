@@ -5,7 +5,8 @@
     <string name="hintText">Escreva o estado em 140 carateres</string>
     <string name="buttonUpdate">Enviar</string>
     <string name="buttonBusy">A ser enviado</string>
-    <string name="failMessage">Falha de atualização.\nError=%s</string>
+    <string name="failMessage">Falha de publicação.\nError=%s</string>
+    <string name="successMessage">Publicação enviada.</string>
     <string name="terminate">Sair</string>
     <string name="userTitle">Utilizador</string>
     <string name="userSum">Nome do utilizador</string>
@@ -14,5 +15,5 @@
     <string name="urlTitle">Url</string>
     <string name="urlSum">Url base do serviço </string>
     <string name="prefs">Definições</string>
-    <string name="textViewAvailChars">Caracteres disponíveis:</string>
+    <string name="textViewAvailChars">Caracteres disponíveis: </string>
 </resources>
