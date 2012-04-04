@@ -2,7 +2,7 @@
 <resources>
     <string name="prefs_name">Preferências Yamba</string>
     <string name="titleStatus">Atualização de Estado</string>
-    <string name="hintText">Escreva o estado em 140 carateres</string>
+    <string name="hintText">Escreva o estado em %d caracteres</string>
     <string name="buttonUpdate">Enviar</string>
     <string name="buttonBusy">A ser enviado</string>
     <string name="failMessage">Falha de publicação.\nError=%s</string>
@@ -15,5 +15,5 @@
     <string name="urlTitle">Url</string>
     <string name="urlSum">Url base do serviço </string>
     <string name="prefs">Definições</string>
-    <string name="textViewAvailChars">Caracteres disponíveis: </string>
+    <string name="textViewAvailChars">Caracteres disponíveis:\u0020</string>
 </resources>

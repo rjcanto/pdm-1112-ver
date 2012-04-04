@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -18,7 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 public class StatusActivity extends Activity 
-                 implements OnClickListener, OnSharedPreferenceChangeListener {
+                 implements OnClickListener, OnSharedPreferenceChangeListener, TextWatcher {
 	private static final String TAG = "PDM";
 	private static final int MAX_CHARS = 140 ;
 	private Button _submit;
@@ -26,7 +27,6 @@ public class StatusActivity extends Activity
 	private Twitter _twitter;
 	private SharedPreferences _prefs;
 	private TextView _availChars;
-	private int _nAvailChars;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -34,37 +34,25 @@ public class StatusActivity extends Activity
 		Log.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
 		_submit = (Button) findViewById(R.id.buttonUpdate);
 		_submit.setOnClickListener(this);
+		
 		App app = (App) getApplication();
 		if (app.lastSubmit != null && !app.lastSubmit.isEnabled())
 			disableSubmit();
 		app.lastSubmit = _submit;
+		
 		_text = (EditText) findViewById(R.id.editText);
-		_text.addTextChangedListener(new TextWatcher() {
-			
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-				_availChars.setText(String.valueOf(MAX_CHARS-s.length()));
-				
-			}
-		});
+		_text.setHint(getString(R.string.hintText, MAX_CHARS));
+		_text.addTextChangedListener(this);
+		_text.setFilters(new InputFilter[] { new InputFilter.LengthFilter(MAX_CHARS) });
+
 		_prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		_prefs.registerOnSharedPreferenceChangeListener(this);
+		
 		_availChars = (TextView) findViewById(R.id.availChars);
 		_availChars.setText(String.valueOf(MAX_CHARS));
-		_nAvailChars = MAX_CHARS ;
 		
 	}
 	
@@ -74,6 +62,14 @@ public class StatusActivity extends Activity
 		disableSubmit();
 		// Update status and enable submit in background  
 		new UpdateStatusTask().execute(_text.getText().toString());
+	}
+	
+	public void onTextChanged(CharSequence s, int start, int before, int count) { }
+	
+	public void beforeTextChanged(CharSequence s, int start, int count,	int after) { }
+	
+	public void afterTextChanged(Editable s) {
+		_availChars.setText(String.valueOf(MAX_CHARS - s.length()));
 	}
 
 	/** Initialize options menu */
@@ -130,7 +126,6 @@ public class StatusActivity extends Activity
 				showToast(getString(R.string.successMessage));
 				_text.setText("");
 				_availChars.setText(String.valueOf(MAX_CHARS)) ;
-				_nAvailChars = MAX_CHARS ;
 			}
 			enableSubmit();
 		}
