@@ -27,6 +27,7 @@ public class StatusActivity extends Activity
 	private Twitter _twitter;
 	private SharedPreferences _prefs;
 	private TextView _availChars;
+	private int _maxChars;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -43,17 +44,18 @@ public class StatusActivity extends Activity
 			disableSubmit();
 		app.lastSubmit = _submit;
 		
-		_text = (EditText) findViewById(R.id.editText);
-		_text.setHint(getString(R.string.hintText, MAX_CHARS));
-		_text.addTextChangedListener(this);
-		_text.setFilters(new InputFilter[] { new InputFilter.LengthFilter(MAX_CHARS) });
-
+		
 		_prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		_prefs.registerOnSharedPreferenceChangeListener(this);
+		getPreferenceMaxChar();
 		
 		_availChars = (TextView) findViewById(R.id.availChars);
-		_availChars.setText(String.valueOf(MAX_CHARS));
 		
+		
+		_text = (EditText) findViewById(R.id.editText);
+		_text.addTextChangedListener(this);
+		updateStatusMsgBox();
+
 	}
 	
 	/** Called by submit button */
@@ -69,7 +71,7 @@ public class StatusActivity extends Activity
 	public void beforeTextChanged(CharSequence s, int start, int count,	int after) { }
 	
 	public void afterTextChanged(Editable s) {
-		_availChars.setText(String.valueOf(MAX_CHARS - s.length()));
+		_availChars.setText(String.valueOf(_maxChars - s.length()));
 	}
 
 	/** Initialize options menu */
@@ -96,7 +98,11 @@ public class StatusActivity extends Activity
 	/** Invalidates the twitter when changing preferences */
 	public void onSharedPreferenceChanged(SharedPreferences sp,	String key) {
 		Log.d(TAG,"onPrefsChanged");
-		_twitter = null;
+		if(key.equals("maxChars")) {
+			getPreferenceMaxChar();
+			updateStatusMsgBox();
+		}
+		//_twitter = null;
 	}
 
 	// UTILITIES 
@@ -125,7 +131,7 @@ public class StatusActivity extends Activity
 			else {
 				showToast(getString(R.string.successMessage));
 				_text.setText("");
-				_availChars.setText(String.valueOf(MAX_CHARS)) ;
+				_availChars.setText(String.valueOf(_maxChars)) ;
 			}
 			enableSubmit();
 		}
@@ -160,5 +166,20 @@ public class StatusActivity extends Activity
 	private void disableSubmit() {
 		_submit.setEnabled(false);
 		_submit.setText(R.string.buttonBusy);
+	}
+	
+	private void updateStatusMsgBox() {
+		_text.setHint(getString(R.string.hintText, _maxChars));
+		_text.setFilters(new InputFilter[] { new InputFilter.LengthFilter(_maxChars) });
+		if(_text.length() > _maxChars)
+			_text.getText().delete(_maxChars, _text.length());
+		_availChars.setText(String.valueOf(_maxChars-_text.length()));
+	}
+	
+	private void getPreferenceMaxChar() {
+		String sMaxChars = _prefs.getString("maxChars", Integer.toString(MAX_CHARS));
+		if (sMaxChars=="")
+			sMaxChars = Integer.toString(MAX_CHARS) ;
+		_maxChars = Integer.parseInt(sMaxChars) ;
 	}
 }
