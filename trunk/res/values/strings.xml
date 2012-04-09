@@ -16,6 +16,8 @@
     <string name="passSum">The password</string>
     <string name="urlTitle">Url</string>
     <string name="urlSum">Site base url</string>
+    <string name="maxCharsTitle">Maximum Characters</string>
+    <string name="maxCharsSum">Maximum number of characters</string>
     <string name="prefs">Settings</string>
     <string name="text">Settings</string>
     <string name="textViewAvailChars">Available characters:\u0020</string>
