@@ -14,6 +14,8 @@
     <string name="passSum">A palavra-passe</string>
     <string name="urlTitle">Url</string>
     <string name="urlSum">Url base do serviço </string>
+    <string name="maxCharsTitle">Máximo Caracteres</string>
+    <string name="maxCharsSum">Número máximo de caracteres</string>
     <string name="prefs">Definições</string>
     <string name="textViewAvailChars">Caracteres disponíveis:\u0020</string>
 </resources>
