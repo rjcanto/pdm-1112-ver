@@ -9,7 +9,7 @@
     <string name="buttonBusy">Updating</string>
     <string name="failMessage">Update failed.\nError=%s</string>
     <string name="successMessage">Update sent.</string>
-    <string name="terminate">Exit</string>
+    
     <string name="userTitle">User name</string>
     <string name="userSum">Name of the user</string>
     <string name="passTitle">Password</string>
@@ -18,7 +18,12 @@
     <string name="urlSum">Site base url</string>
     <string name="maxCharsTitle">Maximum Characters</string>
     <string name="maxCharsSum">Maximum number of characters</string>
-    <string name="prefs">Settings</string>
-    <string name="text">Settings</string>
     <string name="textViewAvailChars">Available characters:\u0020</string>
+    
+    <!-- MENU Strings -->
+    <string name="menuTimeline">Timeline</string>
+    <string name="menuStatus">Status</string>
+    <string name="menuPrefs">Settings</string>
+    <string name="menuTerminate">Exit</string>
+    
 </resources>

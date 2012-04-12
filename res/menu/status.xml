@@ -2,11 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/terminate" 
           android:icon="@android:drawable/ic_menu_close_clear_cancel"
-          android:title="@string/terminate">
+          android:title="@string/menuTerminate">
     </item>
     <item android:id="@+id/prefs" 
           android:icon="@android:drawable/ic_menu_preferences"
-          android:title="@string/prefs">
+          android:title="@string/menuPrefs">
+    </item>
+    <item android:id="@+id/timeline" 
+          android:icon="@android:drawable/ic_menu_recent_history"
+          android:title="@string/menuTimeline">
+    </item>
+    <item android:id="@+id/status" 
+          android:icon="@android:drawable/ic_menu_send"
+          android:title="@string/menuStatus">
     </item>
     
 

@@ -7,7 +7,7 @@
     <string name="buttonBusy">A ser enviado</string>
     <string name="failMessage">Falha de publicação.\nError=%s</string>
     <string name="successMessage">Publicação enviada.</string>
-    <string name="terminate">Sair</string>
+    
     <string name="userTitle">Utilizador</string>
     <string name="userSum">Nome do utilizador</string>
     <string name="passTitle">Palavra-passe</string>
@@ -16,6 +16,15 @@
     <string name="urlSum">Url base do serviço </string>
     <string name="maxCharsTitle">Máximo Caracteres</string>
     <string name="maxCharsSum">Número máximo de caracteres</string>
-    <string name="prefs">Definições</string>
     <string name="textViewAvailChars">Caracteres disponíveis:\u0020</string>
+    
+    <!-- MENU Strings -->
+    <!-- menuTime is only for best practices reason, 
+         because is equal in 'values\strings.xml'
+    -->
+    <string name="menuTimeline">Timeline</string> 
+    <string name="menuStatus">Estado</string>
+    <string name="menuPrefs">Definições</string>
+    <string name="menuTerminate">Sair</string>
+    
 </resources>

@@ -1,5 +1,7 @@
 package pt.isel.pdm.Yamba;
 
+import java.io.Serializable;
+
 import winterwell.jtwitter.Twitter;
 import android.app.Activity;
 import android.content.Intent;
@@ -34,7 +36,7 @@ public class StatusActivity extends Activity
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.status);
 		
 		_submit = (Button) findViewById(R.id.buttonUpdate);
 		_submit.setOnClickListener(this);
@@ -55,7 +57,13 @@ public class StatusActivity extends Activity
 		_text = (EditText) findViewById(R.id.editText);
 		_text.addTextChangedListener(this);
 		updateStatusMsgBox();
-
+		
+		
+		/*// Test using Intents to pass _twitter to TimelineActivity
+		Intent intent = new Intent(getBaseContext(), TimelineActivity.class);
+		savedInstanceState.putSerializable("twitter", (Serializable)_twitter);
+		intent.putExtra("bundle", savedInstanceState);
+		startActivity(intent);*/
 	}
 	
 	/** Called by submit button */
