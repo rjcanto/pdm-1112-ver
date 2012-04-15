@@ -22,6 +22,7 @@ public class StatusActivity extends Activity
 	private EditText _text;
 	private App _app;
 	private TextView _availChars;
+	private GeneralMenu _generalMenu;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -65,23 +66,19 @@ public class StatusActivity extends Activity
 
 	/** Initialize options menu */
 	@Override
-	public boolean onCreateOptionsMenu(Menu m) {
-		getMenuInflater().inflate(R.menu.general, m);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		//getMenuInflater().inflate(R.menu.general, m);
+		_generalMenu = new GeneralMenu(this, menu);
+		_generalMenu.timeline().setVisible(true);
+		_generalMenu.status().setVisible(false);
+		_generalMenu.refresh().setVisible(false);
 		return true;
 	}
 
 	/** Process Item Menu selected */
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menuTerminate:
-			finish();
-			return true;
-		case R.id.menuPrefs:
-			startActivity( new Intent(this, PrefsActivity.class) );
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+	public boolean onOptionsItemSelected(MenuItem item) {		
+		return _generalMenu.processSelection(item) ? true : super.onOptionsItemSelected(item);
 	}
 
 	/** Invalidates the twitter when changing preferences */
