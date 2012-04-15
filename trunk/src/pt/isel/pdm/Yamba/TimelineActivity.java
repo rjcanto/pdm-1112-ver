@@ -5,6 +5,7 @@ import java.util.List;
 
 import winterwell.jtwitter.Twitter;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,14 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class TimelineActivity extends ListActivity{
 
 	App _app;
-	ListView listStatusView ;
-	ArrayAdapter<Twitter.Status> listStatusAdapter;
 	LayoutInflater mInflater;
 	
 	@Override
@@ -62,6 +60,7 @@ public class TimelineActivity extends ListActivity{
 	private class GetTimelineTask extends AsyncTask<Void, Void, Void> {
 		List<winterwell.jtwitter.Twitter.Status> _list ;
 		Context _context;
+		ProgressDialog _dialog;
 		
 		public GetTimelineTask(Context context) {
 			_context = context ;
@@ -69,9 +68,20 @@ public class TimelineActivity extends ListActivity{
 		
 		
 		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			_dialog = ProgressDialog.show(_context, "", getString(R.string.tl_dialog_message),true);
+		}
+
+
+		@Override
 		protected void onPostExecute(Void res) {
-			// TODO Auto-generated method stub
-			//super.onPostExecute(result);
+			super.onPostExecute(res);
+			
+			if (_dialog.isShowing()) {
+	            _dialog.dismiss();
+	        }
+			
 			setListAdapter(new ArrayAdapter<Twitter.Status>(
 	    			_context,
 	    			R.layout.timeline_item,
@@ -90,15 +100,12 @@ public class TimelineActivity extends ListActivity{
 	        			 tvUser.setText(getItem(position).getUser().toString());
 	     
 	        			 TextView tvTime = (TextView) item.findViewById(R.id.tl_item_textTime);
-	        			 Date itemDate = getItem(position).getCreatedAt();
+	        			 //tvTime.setText(getItem(position).getCreatedAt().toGMTString());
+	        			 Date itemTime = getItem(position).getCreatedAt() ;
 	        			 tvTime.setText(
-	        					 //itemDate.toString()
-	        					 /**
-	        					 String.valueOf(itemDate.getDate()) +
-	        					 String.valueOf(itemDate.getMonth())
-	        					 /**/
-	        					 itemDate.toGMTString()
-						 );
+	        					 String.valueOf(itemTime.getDate()) + 
+	        					 String.valueOf(itemTime.getMonth())
+	        			 );
 	        			 
 	        			 TextView tvMessage = (TextView) item.findViewById(R.id.tl_item_textMessage);
 	        			 tvMessage.setText(getItem(position).getText());
@@ -116,6 +123,4 @@ public class TimelineActivity extends ListActivity{
 			
 		}
 	}
-	
-
 }

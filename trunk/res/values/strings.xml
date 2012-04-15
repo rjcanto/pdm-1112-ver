@@ -32,8 +32,10 @@
     <string name="menuPrefs">Settings</string>
     <string name="menuTerminate">Exit</string>
     
+    <!-- Timeline -->
+    <string name="tl_dialog_message">Loading Timeline</string>
     
-    <!-- Timeline Items Strings -->
+    <!-- Timeline Items -->
     <string name="tl_item_textmessage">Message</string>
     <string name="tl_item_textuser">User</string>
     <string name="tl_item_texttime">Created At</string>
