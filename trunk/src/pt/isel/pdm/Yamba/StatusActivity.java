@@ -47,13 +47,6 @@ public class StatusActivity extends Activity
 		_text = (EditText) findViewById(R.id.editText);
 		_text.addTextChangedListener(this);
 		updateStatusMsgBox();
-		
-		
-		/*// Test using Intents to pass _twitter to TimelineActivity
-		Intent intent = new Intent(getBaseContext(), TimelineActivity.class);
-		savedInstanceState.putSerializable("twitter", (Serializable)_twitter);
-		intent.putExtra("bundle", savedInstanceState);
-		startActivity(intent);*/
 	}
 	
 	/** Called by submit button */

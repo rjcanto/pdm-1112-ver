@@ -4,6 +4,7 @@
     <string name="prefs_name">Preferences Yamba</string>
     <string name="titleYamba">Yamba PDM</string>
     <string name="titleStatus">Status Update</string>
+    <string name="titleTimeline">Timeline</string>
     <string name="hintText">Please enter your %d character status</string>
     <string name="buttonUpdate">Submit</string>
     <string name="buttonBusy">Updating</string>
@@ -27,5 +28,11 @@
     <string name="menuStatus">Status</string>
     <string name="menuPrefs">Settings</string>
     <string name="menuTerminate">Exit</string>
+    
+    
+    <!-- Timeline Items Strings -->
+    <string name="tl_item_textmessage">Message</string>
+    <string name="tl_item_textuser">User</string>
+    <string name="tl_item_texttime">Created At</string>
     
 </resources>
