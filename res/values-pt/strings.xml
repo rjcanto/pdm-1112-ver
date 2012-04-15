@@ -33,6 +33,8 @@
     <string name="menuPrefs">Definições</string>
     <string name="menuTerminate">Sair</string>
     
+    <!-- Timeline -->
+    <string name="tl_dialog_message">Actualizando Timeline</string>
     
     <!-- Timeline Items Strings -->
     <string name="tl_item_textmessage">Mensagem</string>
