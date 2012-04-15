@@ -14,7 +14,6 @@ public class PrefsActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		_app = (App) getApplication();
 		addPreferencesFromResource(R.xml.app_prefs);
-		Utils.showToast(this, getString(R.string.fillRequiredPreferences));
 	}
 
 	@Override

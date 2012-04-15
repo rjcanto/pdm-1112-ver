@@ -13,6 +13,7 @@
         <activity
             android:name=".TimelineActivity"
             android:label="@string/app_name" >
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,14 +22,20 @@
          -->
         <activity
             android:name=".TimelineActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".StatusActivity"
+            android:label="@string/app_name" 
+            android:launchMode="singleTask" />
+        <activity
             android:name=".PrefsActivity"
-            android:label="@string/prefs_name" />
+            android:label="@string/prefs_name" 
+            android:launchMode="singleTask" />
         </application>
 </manifest>

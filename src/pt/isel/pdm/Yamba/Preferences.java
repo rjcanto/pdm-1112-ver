@@ -67,7 +67,7 @@ final class Preferences implements OnSharedPreferenceChangeListener {
 	public String url() { return _prefs.getString("url", ""); }
 	
 	/** Check if required preferences are filled */
-	public Boolean hasRequired() {
+	public boolean hasRequired() {
 		return !user().equals("") && !url().equals("");
 	}
 }
