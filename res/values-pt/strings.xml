@@ -2,6 +2,7 @@
 <resources>
     <string name="prefs_name">Preferências Yamba</string>
     <string name="titleStatus">Atualização de Estado</string>
+    <string name="titleTimeline">Timeline</string>
     <string name="hintText">Escreva o estado em %d caracteres</string>
     <string name="buttonUpdate">Enviar</string>
     <string name="buttonBusy">A ser enviado</string>
@@ -28,5 +29,11 @@
     <string name="menuStatus">Estado</string>
     <string name="menuPrefs">Definições</string>
     <string name="menuTerminate">Sair</string>
+    
+    
+    <!-- Timeline Items Strings -->
+    <string name="tl_item_textmessage">Mensagem</string>
+    <string name="tl_item_textuser">Utilizador</string>
+    <string name="tl_item_texttime">Criado em</string>
     
 </resources>

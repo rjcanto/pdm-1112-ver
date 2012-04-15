@@ -1,6 +1,9 @@
 package pt.isel.pdm.Yamba;
 
+import java.util.List;
+
 import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.Twitter.Status;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
@@ -35,9 +38,10 @@ public class App extends Application implements OnPreferenceChangeListener {
 		_twitter.setAPIRootUrl(_prefs.url());
 		return _twitter;
 	}
-
+	
 	public void onPreferenceChanged(Preferences sp, String key) {
 		if (key == "url" || key == "user" || key == "pass")
-			_twitter = null;		
+			_twitter = null;
+			
 	}
 }
