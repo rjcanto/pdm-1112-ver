@@ -6,8 +6,10 @@ import java.util.List;
 import winterwell.jtwitter.Twitter;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class TimelineActivity extends ListActivity {
+public class TimelineActivity extends ListActivity{
 
 	App _app;
 	ListView listStatusView ;
@@ -25,23 +27,38 @@ public class TimelineActivity extends ListActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(App.TAG, "TimelineActivity.onCreate");
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.timeline);
-		_app = (App) getApplication() ;
+		_app = (App) getApplication() ;	
 		mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
-		new GetTimelineTask(this).execute();
+		ensureRequiredPreferences();		
+		setContentView(R.layout.timeline);
+		new GetTimelineTask(this).execute();			
 	}
 	
-
 	
-
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		ensureRequiredPreferences();
+	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		// TODO Auto-generated method stub
 	}
 
+
+	/** Ensure required preferences are filled */
+	private void ensureRequiredPreferences() {		
+		if (_app.prefs().hasRequired())
+			return;		
+		Log.d(App.TAG, "Required preferences are missing");
+		Utils.showToast(_app.context(), getString(R.string.fillRequiredPreferences));
+		startActivity(new Intent(this, PrefsActivity.class));	
+	}
+	
 	private class GetTimelineTask extends AsyncTask<Void, Void, Void> {
 		List<winterwell.jtwitter.Twitter.Status> _list ;
 		Context _context;
@@ -99,4 +116,6 @@ public class TimelineActivity extends ListActivity {
 			
 		}
 	}
+	
+
 }
