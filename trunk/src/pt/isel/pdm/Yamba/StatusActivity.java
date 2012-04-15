@@ -1,15 +1,9 @@
 package pt.isel.pdm.Yamba;
 
-import java.io.Serializable;
-
-import winterwell.jtwitter.Twitter;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -18,18 +12,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class StatusActivity extends Activity 
-                 implements OnClickListener, OnSharedPreferenceChangeListener, TextWatcher {
+                 implements OnClickListener, OnPreferenceChangeListener, TextWatcher {
 	private static final String TAG = "PDM";
-	private static final int MAX_CHARS = 140 ;
 	private Button _submit;
 	private EditText _text;
-	private Twitter _twitter;
-	private SharedPreferences _prefs;
+	private App _app;
 	private TextView _availChars;
-	private int _maxChars;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -41,19 +35,15 @@ public class StatusActivity extends Activity
 		_submit = (Button) findViewById(R.id.buttonUpdate);
 		_submit.setOnClickListener(this);
 		
-		App app = (App) getApplication();
-		if (app.lastSubmit != null && !app.lastSubmit.isEnabled())
+		_app = (App) getApplication();
+		if (_app.lastSubmit != null && !_app.lastSubmit.isEnabled())
 			disableSubmit();
-		app.lastSubmit = _submit;
+		_app.lastSubmit = _submit;
 		
-		
-		_prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		_prefs.registerOnSharedPreferenceChangeListener(this);
-		getPreferenceMaxChar();
+		_app.prefs().registerOnPreferenceChangeListener(this);		
 		
 		_availChars = (TextView) findViewById(R.id.availChars);
-		
-		
+				
 		_text = (EditText) findViewById(R.id.editText);
 		_text.addTextChangedListener(this);
 		updateStatusMsgBox();
@@ -79,7 +69,7 @@ public class StatusActivity extends Activity
 	public void beforeTextChanged(CharSequence s, int start, int count,	int after) { }
 	
 	public void afterTextChanged(Editable s) {
-		_availChars.setText(String.valueOf(_maxChars - s.length()));
+		_availChars.setText(String.valueOf(_app.prefs().maxChars() - s.length()));
 	}
 
 	/** Initialize options menu */
@@ -97,20 +87,17 @@ public class StatusActivity extends Activity
 			finish();
 			return true;
 		case R.id.prefs:
-			startActivity( new Intent(this,PrefsActivity.class) );
+			startActivity( new Intent(this, PrefsActivity.class) );
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	/** Invalidates the twitter when changing preferences */
-	public void onSharedPreferenceChanged(SharedPreferences sp,	String key) {
+	public void onPreferenceChanged(Preferences prefs, String key) {
 		Log.d(TAG,"onPrefsChanged");
-		if(key.equals("maxChars")) {
-			getPreferenceMaxChar();
+		if (key.equals("maxChars"))
 			updateStatusMsgBox();
-		}
-		//_twitter = null;
 	}
 
 	// UTILITIES 
@@ -123,7 +110,7 @@ public class StatusActivity extends Activity
 		protected Void doInBackground(String... params) {
 			try {
 				long startTm = System.currentTimeMillis();
-				getTwitter().updateStatus(params[0]);
+				_app.twitter().updateStatus(params[0]);
 				long elapsedTm = System.currentTimeMillis() - startTm;
 				if (elapsedTm < TOTAL_TM) // Provides a minimum duration
 					Thread.sleep(TOTAL_TM - elapsedTm);
@@ -139,7 +126,7 @@ public class StatusActivity extends Activity
 			else {
 				showToast(getString(R.string.successMessage));
 				_text.setText("");
-				_availChars.setText(String.valueOf(_maxChars)) ;
+				_availChars.setText(String.valueOf(_app.prefs().maxChars())) ;
 			}
 			enableSubmit();
 		}
@@ -148,19 +135,6 @@ public class StatusActivity extends Activity
 	/** Displays a Toast with long length duration */ 
 	private void showToast(String txt) {
 		Toast.makeText(StatusActivity.this, txt, Toast.LENGTH_LONG).show();		
-	}
-	
-	/** Return the twitter object using shared preferences */ 
-	private Twitter getTwitter() {
-		if (_twitter == null) {
-			Log.d(TAG, "new Twitter");
-			String user = _prefs.getString("user", "");
-			String pass = _prefs.getString("pass", "");
-			String url = _prefs.getString("url", "");
-			_twitter = new Twitter(user, pass);
-			_twitter.setAPIRootUrl(url);
-		}
-		return _twitter;
 	}
 
 	/** Enable submit button of last activity */
@@ -177,17 +151,11 @@ public class StatusActivity extends Activity
 	}
 	
 	private void updateStatusMsgBox() {
-		_text.setHint(getString(R.string.hintText, _maxChars));
-		_text.setFilters(new InputFilter[] { new InputFilter.LengthFilter(_maxChars) });
-		if(_text.length() > _maxChars)
-			_text.getText().delete(_maxChars, _text.length());
-		_availChars.setText(String.valueOf(_maxChars-_text.length()));
-	}
-	
-	private void getPreferenceMaxChar() {
-		String sMaxChars = _prefs.getString("maxChars", Integer.toString(MAX_CHARS));
-		if (sMaxChars=="")
-			sMaxChars = Integer.toString(MAX_CHARS) ;
-		_maxChars = Integer.parseInt(sMaxChars) ;
+		final int maxChars = _app.prefs().maxChars();
+		_text.setHint(getString(R.string.hintText, maxChars));
+		_text.setFilters(new InputFilter[] { new InputFilter.LengthFilter(maxChars) });
+		if(_text.length() > maxChars)
+			_text.getText().delete(maxChars, _text.length());
+		_availChars.setText(String.valueOf(maxChars - _text.length()));
 	}
 }

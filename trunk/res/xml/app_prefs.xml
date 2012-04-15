@@ -13,4 +13,7 @@
     <EditTextPreference android:key="maxChars" android:numeric="integer"
         android:title="@string/maxCharsTitle" 
         android:summary="@string/maxCharsSum"/>
+    <EditTextPreference android:key="maxPosts" 
+        android:title="@string/maxPostsTitle"
+        android:summary="@string/maxPostsSum"/>
 </PreferenceScreen>

@@ -17,6 +17,8 @@
     <string name="maxCharsTitle">Máximo Caracteres</string>
     <string name="maxCharsSum">Número máximo de caracteres</string>
     <string name="textViewAvailChars">Caracteres disponíveis:\u0020</string>
+    <string name="maxPostsTitle">Posts</string>
+    <string name="maxPostsSum">Maximum number of messages shown in timeline</string>
     
     <!-- MENU Strings -->
     <!-- menuTime is only for best practices reason, 
