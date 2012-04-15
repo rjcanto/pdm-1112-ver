@@ -10,6 +10,8 @@
     <string name="buttonBusy">Updating</string>
     <string name="failMessage">Update failed.\nError=%s</string>
     <string name="successMessage">Update sent.</string>
+    <string name="fillRequiredPreferences">User and url required.</string>
+    <string name="connectionError">Error connecting to server. Check username, password and URL.</string>
     
     <string name="userTitle">User name</string>
     <string name="userSum">Name of the user</string>
@@ -20,11 +22,12 @@
     <string name="maxCharsTitle">Maximum Characters</string>
     <string name="maxCharsSum">Maximum number of characters</string>
     <string name="textViewAvailChars">Available characters:\u0020</string>
-    <string name="maxPostsTitle">Mensagens</string>
-    <string name="maxPostsSum">Número máximo de mensagens a mostrar na timeline</string>
+    <string name="maxPostsTitle">Posts</string>
+    <string name="maxPostsSum">Maximum number of posts shown in timeline</string>
     
     <!-- MENU Strings -->
     <string name="menuTimeline">Timeline</string>
+    <string name="menuRefresh">Refresh</string>
     <string name="menuStatus">Status</string>
     <string name="menuPrefs">Settings</string>
     <string name="menuTerminate">Exit</string>

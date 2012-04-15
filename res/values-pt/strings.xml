@@ -8,6 +8,8 @@
     <string name="buttonBusy">A ser enviado</string>
     <string name="failMessage">Falha de publicação.\nError=%s</string>
     <string name="successMessage">Publicação enviada.</string>
+    <string name="fillRequiredPreferences">Utilizador e URL necessários.</string>
+    <string name="connectionError">Erro ao ligar ao servidor. Verifique o nome de utilizador, palavra-passe e URL.</string>
     
     <string name="userTitle">Utilizador</string>
     <string name="userSum">Nome do utilizador</string>
@@ -18,14 +20,15 @@
     <string name="maxCharsTitle">Máximo Caracteres</string>
     <string name="maxCharsSum">Número máximo de caracteres</string>
     <string name="textViewAvailChars">Caracteres disponíveis:\u0020</string>
-    <string name="maxPostsTitle">Posts</string>
-    <string name="maxPostsSum">Maximum number of messages shown in timeline</string>
+    <string name="maxPostsTitle">Número Mensagens</string>
+    <string name="maxPostsSum">Número máximo de mensagens mostradas na timeline</string>
     
     <!-- MENU Strings -->
     <!-- menuTime is only for best practices reason, 
          because is equal in 'values\strings.xml'
     -->
     <string name="menuTimeline">Timeline</string> 
+    <string name="menuRefresh">Actualizar</string>
     <string name="menuStatus">Estado</string>
     <string name="menuPrefs">Definições</string>
     <string name="menuTerminate">Sair</string>

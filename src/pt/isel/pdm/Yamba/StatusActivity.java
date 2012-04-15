@@ -15,11 +15,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class StatusActivity extends Activity 
                  implements OnClickListener, OnPreferenceChangeListener, TextWatcher {
-	private static final String TAG = "PDM";
 	private Button _submit;
 	private EditText _text;
 	private App _app;
@@ -28,7 +26,7 @@ public class StatusActivity extends Activity
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate");
+		Log.d(App.TAG, "StatusActivity.onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.status);
 		
@@ -51,7 +49,7 @@ public class StatusActivity extends Activity
 	
 	/** Called by submit button */
 	public void onClick(View v) {
-		Log.d(TAG, "onClick");
+		Log.d(App.TAG, "StatusActivity.onClick");
 		disableSubmit();
 		// Update status and enable submit in background  
 		new UpdateStatusTask().execute(_text.getText().toString());
@@ -68,7 +66,7 @@ public class StatusActivity extends Activity
 	/** Initialize options menu */
 	@Override
 	public boolean onCreateOptionsMenu(Menu m) {
-		getMenuInflater().inflate(R.menu.status, m);
+		getMenuInflater().inflate(R.menu.general, m);
 		return true;
 	}
 
@@ -76,10 +74,10 @@ public class StatusActivity extends Activity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.terminate:
+		case R.id.menuTerminate:
 			finish();
 			return true;
-		case R.id.prefs:
+		case R.id.menuPrefs:
 			startActivity( new Intent(this, PrefsActivity.class) );
 			return true;
 		}
@@ -88,7 +86,7 @@ public class StatusActivity extends Activity
 
 	/** Invalidates the twitter when changing preferences */
 	public void onPreferenceChanged(Preferences prefs, String key) {
-		Log.d(TAG,"onPrefsChanged");
+		Log.d(App.TAG,"StatusActiviy.onPrefsChanged");
 		if (key.equals("maxChars"))
 			updateStatusMsgBox();
 	}
@@ -107,32 +105,27 @@ public class StatusActivity extends Activity
 				long elapsedTm = System.currentTimeMillis() - startTm;
 				if (elapsedTm < TOTAL_TM) // Provides a minimum duration
 					Thread.sleep(TOTAL_TM - elapsedTm);
-				Log.d(TAG, "Submited. Elapsed time=" + elapsedTm + ", text=" + params[0]);
+				Log.d(App.TAG, "Submited. Elapsed time=" + elapsedTm + ", text=" + params[0]);
 			} catch (Exception ex) { error = ex; }
 			return null;
 		}
 		protected void onPostExecute(Void res) {
-			Log.d(TAG, "onPostExecute");
+			Log.d(App.TAG, "UpdateTask.onPostExecute");
 			
 			if (error!=null)
-				showToast(getString(R.string.failMessage,error));
+				Utils.showToast(_app.context(), getString(R.string.failMessage,error));
 			else {
-				showToast(getString(R.string.successMessage));
+				Utils.showToast(_app.context(), getString(R.string.successMessage));
 				_text.setText("");
 				_availChars.setText(String.valueOf(_app.prefs().maxChars())) ;
 			}
 			enableSubmit();
 		}
 	}
-	
-	/** Displays a Toast with long length duration */ 
-	private void showToast(String txt) {
-		Toast.makeText(StatusActivity.this, txt, Toast.LENGTH_LONG).show();		
-	}
 
 	/** Enable submit button of last activity */
 	private void enableSubmit() {
-		Button submit = ((App) getApplication()).lastSubmit;
+		Button submit = _app.lastSubmit;
 		submit.setEnabled(true);
 		submit.setText(R.string.buttonUpdate);
 	}
