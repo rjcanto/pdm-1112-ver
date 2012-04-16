@@ -75,7 +75,7 @@ public class TimelineActivity extends ListActivity implements OnPreferenceChange
 	private class GetTimelineTask extends AsyncTask<Void, Void, List<Twitter.Status>> {
 		private final Context _context;
 		private Throwable _error;
-		ProgressDialog _dialog;
+		//ProgressDialog _dialog;
 		
 		public GetTimelineTask(Context context) {
 			_context = context ;
@@ -84,15 +84,15 @@ public class TimelineActivity extends ListActivity implements OnPreferenceChange
 		@Override
         protected void onPreExecute() {
                 super.onPreExecute();
-                _dialog = ProgressDialog.show(_context, "", getString(R.string.tl_dialog_message),true);
+                //_dialog = ProgressDialog.show(_context, "", getString(R.string.tl_dialog_message),true);
         }
 		
 		@Override
 		protected void onPostExecute(List<Twitter.Status> list) {
 			Log.d(App.TAG, "GetTimelineTask.onPostExecute");
-			if (_dialog.isShowing()) {
-                _dialog.dismiss();
-            }
+//			if (_dialog.isShowing()) {
+//                _dialog.dismiss();
+//            }
                     
 			if (_error != null) {
 				Log.e(App.TAG, "Error: " + _error.getMessage());
