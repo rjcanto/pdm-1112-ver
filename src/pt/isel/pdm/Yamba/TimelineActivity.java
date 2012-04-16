@@ -142,8 +142,10 @@ public class TimelineActivity extends ListActivity implements OnPreferenceChange
 
    			TextView tvMessage = (TextView) convertView.findViewById(R.id.tl_item_textMessage);
    			
-   			//TODO:preferences
-   			tvMessage.setText(getItem(position).getText().substring(0, 10));
+   			String msg = getItem(position).getText();
+   			int previewChars = _app.prefs().previewChars(); 
+   			int length = (previewChars > msg.length()) ? msg.length() : previewChars;
+   			tvMessage.setText(msg.substring(0, length));
    			convertView.setOnClickListener(this);
    			return convertView;
    		}
@@ -163,10 +165,17 @@ public class TimelineActivity extends ListActivity implements OnPreferenceChange
 		}   	
 	}
 
-	public void onPreferenceChanged(Preferences sp, String key, boolean sessionInvalidated) {
+	public void onPreferenceChanged(Preferences prefs, String key, boolean sessionInvalidated) {
 		Log.d(App.TAG, "TimelineActivity.onPreferenceChanged");
-		if (sessionInvalidated)
+		if (sessionInvalidated) {
 			_statusAdapter = null;
+			return;
+		}
+		if (key == "maxPosts") {
+			_app.twitter().setCount(prefs.maxPosts());
+			return;
+		}
+		
 	}
 	
 	public String dateToAge(Date date) {

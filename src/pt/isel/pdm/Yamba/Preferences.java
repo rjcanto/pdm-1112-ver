@@ -17,6 +17,7 @@ final class Preferences implements OnSharedPreferenceChangeListener {
 	
 	private static final int MAX_CHARS = 140;
 	private static final int MAX_POSTS = 10;
+	private static final int PREVIEW_CHARS = 10;
 	
 	private final SharedPreferences _prefs;
 	private final List<OnPreferenceChangeListener> _prefListeners;
@@ -58,6 +59,12 @@ final class Preferences implements OnSharedPreferenceChangeListener {
 	public int maxPosts() {
 		String maxPosts = _prefs.getString("maxPosts", Integer.toString(MAX_POSTS));		
 		return maxPosts.equals("") ? MAX_POSTS : Integer.parseInt(maxPosts);		
+	}
+	
+	/** Returns the previewChars preference value */
+	public int previewChars() {
+		String previewChars = _prefs.getString("previewChars", Integer.toString(PREVIEW_CHARS));		
+		return previewChars.equals("") ? PREVIEW_CHARS : Integer.parseInt(previewChars);
 	}
 
 	/** Returns the user preference value */
