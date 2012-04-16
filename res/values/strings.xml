@@ -32,9 +32,9 @@
     <string name="menuTerminate">Exit</string>
     
     <!-- Timeline -->
-    <string name="titleTimeline">Timeline</string>    
     <string name="tl_dialog_message">Loading Timeline</string>
-        
+    <string name="tl_title">Timeline</string>
+    
     <!-- Timeline Items -->
     <string name="tl_item_textmessage">Message</string>
     <string name="tl_item_textuser">User</string>
@@ -48,5 +48,12 @@
     <!-- App -->
     <string name="app_name">Yamba PDM</string>    
     <string name="titleYamba">Yamba PDM</string>
+    
+    <!-- Detail -->
+    <string name="detail_user">User</string>
+    <string name="detail_message">Message</string>
+    <string name="detail_time">Created At</string>
+    <string name="detail_id">Message Id</string>
+    <string name="detail_title">Detail</string>
     
 </resources>

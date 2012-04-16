@@ -41,4 +41,6 @@
     <string name="yesterday">Ontem</string>
     <string name="daysAgo">Há %d dias</string>
     
+    <string name="detail_title">Detalhe</string>
+    
 </resources>
