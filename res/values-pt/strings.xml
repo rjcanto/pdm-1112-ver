@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="prefs_name">Preferências Yamba</string>
-    <string name="titleStatus">Atualização de Estado</string>
-    <string name="titleTimeline">Timeline</string>
+    
+    <!-- StatusActivity -->
+    <string name="titleStatus">Atualização de Estado</string>    
     <string name="hintText">Escreva o estado em %d caracteres</string>
     <string name="buttonUpdate">Enviar</string>
     <string name="buttonBusy">A ser enviado</string>
     <string name="failMessage">Falha de publicação.\nError=%s</string>
     <string name="successMessage">Publicação enviada.</string>
-    <string name="fillRequiredPreferences">Utilizador e URL necessários.</string>
+    <string name="textViewAvailChars">Caracteres disponíveis:\u0020</string>
     <string name="connectionError">Erro ao ligar ao servidor. Verifique o nome de utilizador, palavra-passe e URL.</string>
     
+    <!--  Preferences -->
+    <string name="prefs_name">Preferências Yamba</string>
     <string name="userTitle">Utilizador</string>
     <string name="userSum">Nome do utilizador</string>
     <string name="passTitle">Palavra-passe</string>
     <string name="passSum">A palavra-passe</string>
-    <string name="urlTitle">Url</string>
-    <string name="urlSum">Url base do serviço </string>
     <string name="maxCharsTitle">Máximo Caracteres</string>
     <string name="maxCharsSum">Número máximo de caracteres</string>
-    <string name="textViewAvailChars">Caracteres disponíveis:\u0020</string>
     <string name="maxPostsTitle">Número Mensagens</string>
     <string name="maxPostsSum">Número máximo de mensagens mostradas na timeline</string>
+    <string name="fillRequiredPreferences">Utilizador e URL necessários.</string>
+    <string name="urlTitle">Url</string>
+    <string name="urlSum">Url base do serviço </string>
     
-    <!-- MENU Strings -->
-    <!-- menuTime is only for best practices reason, 
-         because is equal in 'values\strings.xml'
-    -->
+    <!-- Menu strings -->
     <string name="menuTimeline">Timeline</string> 
     <string name="menuRefresh">Actualizar</string>
     <string name="menuStatus">Estado</string>
@@ -34,11 +33,12 @@
     <string name="menuTerminate">Sair</string>
     
     <!-- Timeline -->
+    <string name="titleTimeline">Timeline</string>    
     <string name="tl_dialog_message">Actualizando Timeline</string>
     
-    <!-- Timeline Items Strings -->
-    <string name="tl_item_textmessage">Mensagem</string>
-    <string name="tl_item_textuser">Utilizador</string>
-    <string name="tl_item_texttime">Criado em</string>
+    <!-- Date terms -->
+    <string name="today">Hoje</string>
+    <string name="yesterday">Ontem</string>
+    <string name="daysAgo">Há %d dias</string>
     
 </resources>

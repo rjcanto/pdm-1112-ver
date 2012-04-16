@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 interface OnPreferenceChangeListener {
-	public void onPreferenceChanged(Preferences sp,	String key);
+	public void onPreferenceChanged(Preferences sp,	String key, boolean sessionInvalidated);
 }
 
 final class Preferences implements OnSharedPreferenceChangeListener {
@@ -41,8 +41,11 @@ final class Preferences implements OnSharedPreferenceChangeListener {
 	/** Notify all listeners that a preference was changed */
 	public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
 		Log.d(App.TAG, "Preferences.onSharedPreferenceChanged");
+		
+		boolean sessionInvalidated = (key == "user" || key == "pass" || key == "url");
+		
 		for (OnPreferenceChangeListener listener : _prefListeners)
-			listener.onPreferenceChanged(this, key);
+			listener.onPreferenceChanged(this, key, sessionInvalidated);
 	}
 	
 	/** Returns the maxChars preference value */
@@ -70,4 +73,5 @@ final class Preferences implements OnSharedPreferenceChangeListener {
 	public boolean hasRequired() {
 		return !user().equals("") && !url().equals("");
 	}
+	
 }

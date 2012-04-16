@@ -9,5 +9,6 @@ public final class Utils {
 	public static void showToast(Context ctx, String txt) {
 		Toast.makeText(ctx, txt, Toast.LENGTH_LONG).show();
 	}
+	
 }
 

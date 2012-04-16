@@ -21,7 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class TimelineActivity extends ListActivity{
+public class TimelineActivity extends ListActivity implements OnPreferenceChangeListener {
 
 	private App _app;
 	private GeneralMenu _generalMenu;
@@ -142,19 +142,31 @@ public class TimelineActivity extends ListActivity{
 
    			TextView tvTime = (TextView) item.findViewById(R.id.tl_item_textTime);
    			Date itemDate = getItem(position).getCreatedAt();
-   			tvTime.setText(
-   					//itemDate.toString()
-   					/**
-					 String.valueOf(itemDate.getDate()) +
-					 String.valueOf(itemDate.getMonth())
-					 /**/
-   					itemDate.toGMTString()
-   					);
+   			tvTime.setText(dateToAge(itemDate));
 
    			TextView tvMessage = (TextView) item.findViewById(R.id.tl_item_textMessage);
    			tvMessage.setText(getItem(position).getText());
 
    			return item;
    		}   	
+	}
+
+	public void onPreferenceChanged(Preferences sp, String key, boolean sessionInvalidated) {
+		Log.d(App.TAG, "TimelineActivity.onPreferenceChanged");
+		if (sessionInvalidated)
+			_statusAdapter = null;
+	}
+	
+	public String dateToAge(Date date) {
+		final int secondsInADay = 60 * 60 * 24;
+		
+		Date now = new Date();
+		long days = (now.getTime() - date.getTime()) / secondsInADay;
+		
+		if (days == 0)
+			return getString(R.string.today);
+		if (days == 1)
+			return getString(R.string.yesterday);
+		return getString(R.string.daysAgo, days);
 	}
 }

@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Yamba PDM</string>
-    <string name="prefs_name">Preferences Yamba</string>
-    <string name="titleYamba">Yamba PDM</string>
+    <!-- StatusActivity -->
     <string name="titleStatus">Status Update</string>
-    <string name="titleTimeline">Timeline</string>
     <string name="hintText">Please enter your %d character status</string>
     <string name="buttonUpdate">Submit</string>
     <string name="buttonBusy">Updating</string>
     <string name="failMessage">Update failed.\nError=%s</string>
     <string name="successMessage">Update sent.</string>
-    <string name="fillRequiredPreferences">User and url required.</string>
+    <string name="textViewAvailChars">Available characters:\u0020</string>
     <string name="connectionError">Error connecting to server. Check username, password and URL.</string>
     
+    <!--  Preferences -->
+    <string name="prefs_name">Preferences Yamba</string>
     <string name="userTitle">User name</string>
     <string name="userSum">Name of the user</string>
     <string name="passTitle">Password</string>
     <string name="passSum">The password</string>
-    <string name="urlTitle">Url</string>
-    <string name="urlSum">Site base url</string>
     <string name="maxCharsTitle">Maximum Characters</string>
     <string name="maxCharsSum">Maximum number of characters</string>
-    <string name="textViewAvailChars">Available characters:\u0020</string>
     <string name="maxPostsTitle">Posts</string>
     <string name="maxPostsSum">Maximum number of posts shown in timeline</string>
+    <string name="fillRequiredPreferences">User and url required.</string>
+    <string name="urlTitle">Url</string>
+    <string name="urlSum">Site base url</string>
     
-    <!-- MENU Strings -->
+    <!-- Menu strings -->
     <string name="menuTimeline">Timeline</string>
     <string name="menuRefresh">Refresh</string>
     <string name="menuStatus">Status</string>
@@ -33,11 +32,21 @@
     <string name="menuTerminate">Exit</string>
     
     <!-- Timeline -->
+    <string name="titleTimeline">Timeline</string>    
     <string name="tl_dialog_message">Loading Timeline</string>
-    
+        
     <!-- Timeline Items -->
     <string name="tl_item_textmessage">Message</string>
     <string name="tl_item_textuser">User</string>
     <string name="tl_item_texttime">Created At</string>
+    
+    <!-- Date terms -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="daysAgo">%d days ago</string>
+    
+    <!-- App -->
+    <string name="app_name">Yamba PDM</string>    
+    <string name="titleYamba">Yamba PDM</string>
     
 </resources>
