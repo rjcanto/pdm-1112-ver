@@ -6,6 +6,7 @@ import java.util.List;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -77,15 +78,25 @@ public class TimelineActivity extends ListActivity{
 	private class GetTimelineTask extends AsyncTask<Void, Void, List<Twitter.Status>> {
 		private final Context _context;
 		private Throwable _error;
+		ProgressDialog _dialog;
 		
 		public GetTimelineTask(Context context) {
 			_context = context ;
 		}		
 		
 		@Override
+        protected void onPreExecute() {
+                super.onPreExecute();
+                _dialog = ProgressDialog.show(_context, "", getString(R.string.tl_dialog_message),true);
+        }
+		
+		@Override
 		protected void onPostExecute(List<Twitter.Status> list) {
 			Log.d(App.TAG, "GetTimelineTask.onPostExecute");
-			
+			if (_dialog.isShowing()) {
+                _dialog.dismiss();
+            }
+                    
 			if (_error != null) {
 				Log.e(App.TAG, "Error: " + _error.getMessage());
 				Utils.showToast(_app.context(), getString(R.string.connectionError));
