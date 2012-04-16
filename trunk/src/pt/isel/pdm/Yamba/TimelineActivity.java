@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.Twitter.Status;
 import winterwell.jtwitter.TwitterException;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -16,8 +17,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -54,10 +55,6 @@ public class TimelineActivity extends ListActivity implements OnPreferenceChange
 		}
 	}
 	
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO Auto-generated method stub
-	}
-
 	
 	/** Initialize options menu */
 	@Override
@@ -121,7 +118,8 @@ public class TimelineActivity extends ListActivity implements OnPreferenceChange
 		
 	}
 	
-	private class StatusAdapter extends ArrayAdapter<Twitter.Status> {		
+	private class StatusAdapter extends ArrayAdapter<Twitter.Status> implements OnClickListener {		
+		int _position ;
 		
 		public StatusAdapter(Context context, int textViewResourceId, List<Twitter.Status> objects) {
 			super(context, textViewResourceId, objects);					
@@ -129,26 +127,40 @@ public class TimelineActivity extends ListActivity implements OnPreferenceChange
 			
    		@Override
    		public View getView(int position, View convertView, ViewGroup parent) {
-   			View item;
-		 
+   			_position = position ;
+   			
    			if (null == convertView) {
    				LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-   				item = mInflater.inflate(R.layout.timeline_item, null);
-   			} else {
-   				item = convertView;
-   			}
-   			TextView tvUser = (TextView) item.findViewById(R.id.tl_item_textUser);
+   				convertView = mInflater.inflate(R.layout.timeline_item, null);
+   			}	
+   			TextView tvUser = (TextView) convertView.findViewById(R.id.tl_item_textUser);
    			tvUser.setText(getItem(position).getUser().toString());
 
-   			TextView tvTime = (TextView) item.findViewById(R.id.tl_item_textTime);
+   			TextView tvTime = (TextView) convertView.findViewById(R.id.tl_item_textTime);
    			Date itemDate = getItem(position).getCreatedAt();
    			tvTime.setText(dateToAge(itemDate));
 
-   			TextView tvMessage = (TextView) item.findViewById(R.id.tl_item_textMessage);
-   			tvMessage.setText(getItem(position).getText());
+   			TextView tvMessage = (TextView) convertView.findViewById(R.id.tl_item_textMessage);
+   			
+   			//TODO:preferences
+   			tvMessage.setText(getItem(position).getText().substring(0, 10));
+   			convertView.setOnClickListener(this);
+   			return convertView;
+   		}
+   			
 
-   			return item;
-   		}   	
+		public void onClick(View v) {
+			Log.d(App.TAG, "TimelineActivity.onItemClick");
+			Intent intent = new Intent(v.getContext(), DetailActivity.class);
+			Status item = (Status) this.getItem(_position) ;
+			intent.putExtra("detailTextUser", item.getUser().toString());
+			intent.putExtra("detailTextMessage", item.getText());
+			intent.putExtra("detailTextTime", item.getCreatedAt().toGMTString());
+			intent.putExtra("detailTextId", "#"+String.valueOf(item.getId()));
+			
+			startActivity(intent);
+			
+		}   	
 	}
 
 	public void onPreferenceChanged(Preferences sp, String key, boolean sessionInvalidated) {

@@ -5,7 +5,7 @@
    <TextView
         android:layout_width="fill_parent"  android:layout_height="wrap_content"
         android:layout_margin="10dp" android:gravity="center"
-        android:text="@string/titleTimeline" android:textSize="32sp"
+        android:text="@string/tl_title" android:textSize="32sp"
         android:textColor="#AA0"/>
 
    <ListView
