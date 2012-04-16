@@ -1,7 +1,6 @@
 package pt.isel.pdm.Yamba;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -67,7 +66,6 @@ public class StatusActivity extends Activity
 	/** Initialize options menu */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		//getMenuInflater().inflate(R.menu.general, m);
 		_generalMenu = new GeneralMenu(this, menu);
 		_generalMenu.timeline().setVisible(true);
 		_generalMenu.status().setVisible(false);
@@ -96,6 +94,7 @@ public class StatusActivity extends Activity
 		private volatile Exception error=null;
 		
 		protected Void doInBackground(String... params) {
+			Log.d(App.TAG, "UpdateStatusTask.doInBackground");
 			try {
 				long startTm = System.currentTimeMillis();
 				_app.twitter().updateStatus(params[0]);
@@ -110,7 +109,7 @@ public class StatusActivity extends Activity
 			Log.d(App.TAG, "UpdateTask.onPostExecute");
 			
 			if (error!=null)
-				Utils.showToast(_app.context(), getString(R.string.failMessage,error));
+				Utils.showToast(_app.context(), getString(R.string.failMessage, error.getCause()));
 			else {
 				Utils.showToast(_app.context(), getString(R.string.successMessage));
 				_text.setText("");
