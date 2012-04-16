@@ -16,14 +16,15 @@
             android:layout_weight="1"
             android:textColor="#AA0"
             android:textSize="20sp" />
-
+
         <TextView
             android:id="@+id/tl_item_textTime"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_weight="1"
+            android:gravity="right"
             android:text="@string/tl_item_texttime"
-            android:layout_weight="1" 
             android:textSize="12sp" />
 
     </LinearLayout>

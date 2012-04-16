@@ -27,9 +27,9 @@ public class App extends Application implements OnPreferenceChangeListener {
 	}
 	
 	/** Invalidate Twitter object if key preferences changed */
-	public void onPreferenceChanged(Preferences sp, String key) {
+	public void onPreferenceChanged(Preferences sp, String key, boolean sessionInvalidated) {
 		Log.d(TAG, "App.onPreferenceChanged");
-		if (key.equals("url") || key.equals("user") || key.equals("pass"))
+		if (sessionInvalidated)
 			_twitter = null;		
 	}
 	

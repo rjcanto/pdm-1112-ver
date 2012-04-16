@@ -80,7 +80,7 @@ public class StatusActivity extends Activity
 	}
 
 	/** Invalidates the twitter when changing preferences */
-	public void onPreferenceChanged(Preferences prefs, String key) {
+	public void onPreferenceChanged(Preferences prefs, String key, boolean sessionInvalidated) {
 		Log.d(App.TAG,"StatusActiviy.onPrefsChanged");
 		if (key.equals("maxChars"))
 			updateStatusMsgBox();
@@ -108,8 +108,8 @@ public class StatusActivity extends Activity
 		protected void onPostExecute(Void res) {
 			Log.d(App.TAG, "UpdateTask.onPostExecute");
 			
-			if (error!=null)
-				Utils.showToast(_app.context(), getString(R.string.failMessage, error.getCause()));
+			if (error != null)
+				Utils.showToast(_app.context(), getString(R.string.connectionError));
 			else {
 				Utils.showToast(_app.context(), getString(R.string.successMessage));
 				_text.setText("");
