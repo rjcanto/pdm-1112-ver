@@ -24,6 +24,9 @@
     <string name="fillRequiredPreferences">Utilizador e URL necessários.</string>
     <string name="urlTitle">Url</string>
     <string name="urlSum">Url base do serviço </string>
+    <string name="previewCharsTitle">Caracteres por mensagem</string>
+    <string name="previewCharsSum">Número de caracteres da mensagem a mostrar na timeline</string>
+    
     
     <!-- Menu strings -->
     <string name="menuTimeline">Timeline</string> 

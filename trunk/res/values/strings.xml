@@ -23,6 +23,8 @@
     <string name="fillRequiredPreferences">User and url required.</string>
     <string name="urlTitle">Url</string>
     <string name="urlSum">Site base url</string>
+    <string name="previewCharsTitle">Characters per post</string>
+    <string name="previewCharsSum">Number of characters per post to display in timeline</string>
     
     <!-- Menu strings -->
     <string name="menuTimeline">Timeline</string>

@@ -16,7 +16,7 @@
             android:layout_weight="1"
             android:textColor="#AA0"
             android:textSize="20sp" />
-
+
         <TextView
             android:id="@+id/tl_item_textTime"
             android:layout_width="0dip"

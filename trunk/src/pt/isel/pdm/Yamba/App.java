@@ -42,6 +42,7 @@ public class App extends Application implements OnPreferenceChangeListener {
 		try {
 			_twitter = new Twitter(_prefs.user(), _prefs.pass());
 			_twitter.setAPIRootUrl(_prefs.url());
+			_twitter.setCount(_prefs.maxPosts());
 		}
 		catch (TwitterException te) {
 			Utils.showToast(context(), getString(R.string.connectionError));
