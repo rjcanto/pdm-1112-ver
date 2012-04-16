@@ -2,6 +2,7 @@ package pt.isel.pdm.Yamba;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -42,6 +43,15 @@ public class GeneralMenu {
 		case R.id.menuTimeline:
 			_activity.startActivity(new Intent(_activity, TimelineActivity.class));
 			return true;
+		case R.id.menuRefresh:
+			if (!(_activity instanceof TimelineActivity)) {
+				Log.w(App.TAG, "Refresh selection called while not in TimelineAcivity");
+				return false;
+			}
+			((TimelineActivity) _activity).refresh();			
+			return true;
+		default:
+			Log.w(App.TAG, "Menu selection not processed");	
 		}
 		return false;
 	}
