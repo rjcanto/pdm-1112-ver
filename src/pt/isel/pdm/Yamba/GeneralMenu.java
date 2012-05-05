@@ -30,18 +30,26 @@ public class GeneralMenu {
 	}
 
 	public boolean processSelection(MenuItem item) {
+		Intent intent;
+		
 		switch (item.getItemId()) {
 		case R.id.menuTerminate:
 			_activity.finish();
 			return true;
 		case R.id.menuPrefs:
-			_activity.startActivity(new Intent(_activity, PrefsActivity.class));
+			 intent = new Intent(_activity, PrefsActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			_activity.startActivity(intent);
 			return true;
 		case R.id.menuStatus:
-			_activity.startActivity(new Intent(_activity, StatusActivity.class));
+			intent = new Intent(_activity, StatusActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			_activity.startActivity(intent);
 			return true;
 		case R.id.menuTimeline:
-			_activity.startActivity(new Intent(_activity, TimelineActivity.class));
+			intent = new Intent(_activity, TimelineActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			_activity.startActivity(intent);
 			return true;
 		case R.id.menuRefresh:
 			if (!(_activity instanceof TimelineActivity)) {
