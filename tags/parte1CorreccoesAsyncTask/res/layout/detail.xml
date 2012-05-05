@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="fill_parent"  android:layout_height="wrap_content"
+        android:layout_margin="10dp" android:gravity="center"
+        android:text="@string/detail_title" android:textSize="32sp"
+        android:textColor="#AA0"/>
+        <TextView
+        android:id="@+id/detail_textUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_user"
+        android:textColor="#AA0"
+        android:textSize="20sp" />
+    
+    <TextView
+        android:id="@+id/detail_textMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_message" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/detail_textTime"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="12sp"             
+            android:text="@string/detail_time" />
+        
+		<TextView
+            android:id="@+id/detail_textId"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:layout_weight="1"
+            android:textSize="12sp"     
+            android:text="@string/detail_id" />
+		
+    </LinearLayout>
+</LinearLayout>
