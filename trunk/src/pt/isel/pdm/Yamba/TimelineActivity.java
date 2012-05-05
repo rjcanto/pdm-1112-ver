@@ -8,6 +8,7 @@ import winterwell.jtwitter.Twitter.Status;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ import android.widget.TextView;
 
 public class TimelineActivity 
 	extends ListActivity
-	implements OnPreferenceChangeListener, OnAsyncTaskDone<List<Twitter.Status>> {
+	implements OnPreferenceChangeListener {
 
 	private App _app;
 	private GeneralMenu _generalMenu;
@@ -41,7 +42,7 @@ public class TimelineActivity
 		if (_app.statusAdapter != null)
 			setListAdapter(_app.statusAdapter);
 		
-		// Was the screen rotated while retrieving timeline?
+		/*// Was the screen rotated while retrieving timeline?
 		AsyncTaskResult<List<Twitter.Status>> timelineResult = _app.timelineResult;
 		if (timelineResult == null)
 			return;
@@ -55,8 +56,14 @@ public class TimelineActivity
 			Log.d(App.TAG, "TimelineActivity.onCreate: receive notification when task is complete");
 			_app.progressDialog = ProgressDialog.show(TimelineActivity.this, "", getString(R.string.tl_dialog_message),true);
 			timelineResult.setOnAsyncTaskDone(this);
-		}
+		}*/
+		
+		Log.d(App.TAG, "TimelineActivity.onCreate: Calling TimelinePullService");
+		Intent intent = new Intent(this, TimelinePullService.class);
+		startService(intent);
 	}
+	
+	
 	
 	@Override
 	protected void onResume() {
@@ -85,9 +92,10 @@ public class TimelineActivity
 			return;
 		}
 		
-		TimelineTask task = new TimelineTask(this);
-		_app.timelineResult = task;
-		task.execute();
+//		
+//		TimelineTask task = new TimelineTask(this);
+//		_app.timelineResult = task;
+//		task.execute();
 	}
 	
 	
@@ -106,49 +114,21 @@ public class TimelineActivity
 	public boolean onOptionsItemSelected(MenuItem item) {		
 		return _generalMenu.processSelection(item) ? true : super.onOptionsItemSelected(item);
 	}
-	
-	public class TimelineTask 
-		extends CustomAsyncTask<Void, Void, List<Twitter.Status>> {
 		
-		public TimelineTask() {
-			super();
-		}
-		
-		public TimelineTask(OnAsyncTaskDone<List<Twitter.Status>> onAsyncTaskDone) {
-			super(onAsyncTaskDone);
-		}		
-		
-		@Override
-        protected void onPreExecute() {
-			Log.d(App.TAG, "TimelineTask.onPreExecute");
-            super.onPreExecute();
-            _app.progressDialog = ProgressDialog.show(TimelineActivity.this, "", getString(R.string.tl_dialog_message),true);
-        }
-		
-		@Override
-		protected List<Twitter.Status> doWork(Void... params) {
-			Log.d(App.TAG, "TimelineTask.doWork");
-			return _app.twitter().getUserTimeline();
-		}		
-	}
-	
-	public void onTaskDone(AsyncTaskResult<List<Twitter.Status>> timeline) {
+	//new onTaskDone to work with TimelinePullService
+	public void onTaskDone(List<Twitter.Status> timeline) {
 		Log.d(App.TAG, "TimelineActivity.onTaskDone");
 		
-		if (timeline.error() != null) {
-			Log.e(App.TAG, "Error: TimelineActivity.onTaskDone " + timeline.error().getMessage());
-			Utils.showToast(this, getString(R.string.connectionError));
-			return;
-		}
+		
 	
 		if (_app.statusAdapter == null) {
 			Log.d(App.TAG, "TimelineActivity.onTaskDone: First time");
-			_app.statusAdapter = new StatusAdapter(this, R.layout.timeline_item, timeline.result());
+			_app.statusAdapter = new StatusAdapter(this, R.layout.timeline_item, timeline);
 		}
 		else {
 			Log.d(App.TAG, "TimelineActivity.onTaskDone: Refresh statusAdapter");
 			_app.statusAdapter.clear();
-			for (Status status : timeline.result())
+			for (Status status : timeline)
 				_app.statusAdapter.add(status);
 		}
 		
