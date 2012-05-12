@@ -1,5 +1,8 @@
 package pt.isel.pdm.Yamba;
 
+import java.util.List;
+
+import winterwell.jtwitter.Twitter;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Handler;
@@ -11,12 +14,12 @@ public class TimelinePullService extends IntentService {
 	
 	public TimelinePullService() {
 		super("TimelinePullService");
-		_app = (App) getApplication() ;
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		_app = (App) getApplication() ;
 		_hMainThread = new Handler();
 	}
 
@@ -24,7 +27,13 @@ public class TimelinePullService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Log.d(App.TAG, "TimelinePullService.onHandleIntent");
 		try {
-			_app.onServiceNewTimelineResult(_app.twitter().getUserTimeline());
+			final List<Twitter.Status> result = _app.twitter().getUserTimeline() ;
+			_hMainThread.post(new Runnable() {
+				public void run() {
+					_app.onServiceNewTimelineResult(result);
+				}
+			});
+			
 		} catch (final Exception e) {
 			_hMainThread.post(new Runnable() {
 				//TODO differentiate errors?
@@ -40,6 +49,12 @@ public class TimelinePullService extends IntentService {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(App.TAG, "TimelinePullService.onStartCommand");
 		return super.onStartCommand(intent, flags, startId);
+	}
+
+	@Override
+	public void onDestroy() {
+		Log.d(App.TAG, "TimelinePullService.onDestroy");
+		super.onDestroy();
 	}
 
 

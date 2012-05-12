@@ -18,7 +18,7 @@ public class App extends Application implements OnPreferenceChangeListener {
 	public Button lastSubmit;
 	public TimelineActivity.StatusAdapter statusAdapter;
 	public ProgressDialog progressDialog;
-	public List<Twitter.Status> timelineResult;
+	public List<Twitter.Status> _timelineResult;
 	public TimelineActivity _timelineAct ;
 	
 	@Override
@@ -43,8 +43,9 @@ public class App extends Application implements OnPreferenceChangeListener {
 	}
 	
 	public void onServiceNewTimelineResult(List<Status> list) {
-		timelineResult = list ;
-		//TODO: chamar método para actualizar adapter
+		_timelineResult = list ;
+		if (_timelineAct != null)
+			_timelineAct.onTaskDone(_timelineResult) ;
 	}
 	
 	/** Returns the Twitter object */ 
