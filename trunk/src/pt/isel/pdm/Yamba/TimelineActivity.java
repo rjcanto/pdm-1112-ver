@@ -22,8 +22,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-
-
 public class TimelineActivity 
 	extends ListActivity
 	implements OnPreferenceChangeListener {
@@ -36,7 +34,11 @@ public class TimelineActivity
 		Log.d(App.TAG, "TimelineActivity.onCreate");
 		super.onCreate(savedInstanceState);
 		_app = (App) getApplication() ;	
+		_app._timelineAct = this ;
 		setContentView(R.layout.timeline);
+		
+		if(_app._timelineResult != null)
+			this.onTaskDone(_app._timelineResult) ;
 		
 	/*	// Show current status list, if any
 		if (_app.statusAdapter != null)
@@ -58,21 +60,43 @@ public class TimelineActivity
 			timelineResult.setOnAsyncTaskDone(this);
 		}
 		*/
+		
+		/*
 		Log.d(App.TAG, "TimelineActivity.onCreate: Calling TimelinePullService");
 		Intent intent = new Intent(this, TimelinePullService.class);
 		startService(intent);
+		*/
 	}
 	
 	
 	
 	@Override
+	protected void onDestroy() {
+		Log.d(App.TAG, "TimelineActivity.onDestroy");
+		_app._timelineAct = null ;
+		super.onDestroy();
+	}
+
+
+
+	@Override
 	protected void onResume() {
 		Log.d(App.TAG, "TimelineActivity.onResume");
 		super.onResume();
+		_app._timelineAct = this ;
 		if (_app.statusAdapter == null)
 			refresh();
 	}
 	
+	@Override
+	protected void onPause() {
+		Log.d(App.TAG, "TimelineActivity.onPause");
+		_app._timelineAct = null ;
+		super.onPause();
+	}
+
+
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -92,6 +116,9 @@ public class TimelineActivity
 			return;
 		}
 		
+		Log.d(App.TAG, "TimelineActivity.refresh: Calling TimelinePullService");
+		Intent intent = new Intent(this, TimelinePullService.class);
+		startService(intent);
 //		
 //		TimelineTask task = new TimelineTask(this);
 //		_app.timelineResult = task;
@@ -138,9 +165,6 @@ public class TimelineActivity
         }
 		
 		setListAdapter(_app.statusAdapter);
-		
-		// Release AsyncTask
-		_app.timelineResult = null;
 	}
 	
 	class StatusAdapter extends ArrayAdapter<Twitter.Status> implements OnClickListener {		
