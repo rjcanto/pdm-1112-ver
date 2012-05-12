@@ -1,22 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <EditTextPreference android:key="user" 
-        android:title="@string/userTitle" 
-        android:summary="@string/userSum"/>
-    <EditTextPreference android:key="pass" 
-        android:title="@string/passTitle" 
-        android:summary="@string/passSum"
-        android:password="true"/>
-    <EditTextPreference android:key="url" 
-        android:title="@string/urlTitle" 
-        android:summary="@string/urlSum"/>
-    <EditTextPreference android:key="maxChars" android:numeric="integer"
-        android:title="@string/maxCharsTitle" 
-        android:summary="@string/maxCharsSum"/>
-    <EditTextPreference android:key="maxPosts" 
-        android:title="@string/maxPostsTitle"
-        android:summary="@string/maxPostsSum"/>
-    <EditTextPreference android:key="previewChars"
-        android:title="@string/previewCharsTitle"
-        android:summary="@string/previewCharsSum"/>
+    
+    <PreferenceCategory 
+        android:title="@string/credentialsCatTitle" 
+        android:key="credentialsCategory">
+        
+	    <EditTextPreference 
+	        android:key="user" 
+	        android:title="@string/userTitle" 
+	        android:summary="@string/userSum"/>
+	    
+	    <EditTextPreference 
+	        android:key="pass" 
+	        android:title="@string/passTitle" 
+	        android:summary="@string/passSum"
+	        android:password="true"/>
+	    
+	    <EditTextPreference 
+	        android:key="url" 
+	        android:title="@string/urlTitle"
+	        android:summary="@string/urlSum"/>
+	    
+    </PreferenceCategory>
+    	
+	    <PreferenceCategory
+	        android:title="@string/statusCatTitle" 
+	        android:key="credentialsCategory">
+		    
+	    <EditTextPreference 
+	        android:key="maxChars" 
+	        android:numeric="integer"
+	        android:title="@string/maxCharsTitle" 
+	        android:summary="@string/maxCharsSum"/>
+	    
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="@string/timelineCatTitle" 
+        android:key="credentialsCategory">
+	
+	    <EditTextPreference 
+	        android:key="maxPosts" 
+	        android:title="@string/maxPostsTitle"
+	        android:summary="@string/maxPostsSum"/>
+	    
+	    <EditTextPreference 
+	        android:key="previewChars"
+	        android:title="@string/previewCharsTitle"
+	        android:summary="@string/previewCharsSum"/>
+	    
+	    <CheckBoxPreference 
+	        android:key="autoRefresh"
+	        android:title="@string/autoRefreshTitle"
+	        android:defaultValue="false" />
+	    
+	    <ListPreference
+			android:key="autoRefreshTime"
+	        android:title="@string/autoRefreshTimeTitle"
+	        android:summary="@string/autoRefreshTimeSum"
+	        android:defaultValue="300000" 
+	        android:entries="@array/autoRefreshList"
+	        android:entryValues="@array/autoRefreshValues"
+	        android:dependency="autoRefresh"/>
+	    
+	    <EditTextPreference 
+	        android:key="maxPostsStored"
+	        android:title="@string/maxPostsStoredTitle"
+	        android:summary="@string/maxPostsStoredSum"/>
+	    
+    </PreferenceCategory>
 </PreferenceScreen>

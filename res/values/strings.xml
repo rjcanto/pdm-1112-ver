@@ -12,19 +12,34 @@
     
     <!--  Preferences -->
     <string name="prefs_name">Preferences Yamba</string>
+    <string name="fillRequiredPreferences">User and url required.</string>
+    
+    <!--  Preferences Credentials Category -->
+    <string name="credentialsCatTitle">Credentials</string>
     <string name="userTitle">User name</string>
     <string name="userSum">Name of the user</string>
     <string name="passTitle">Password</string>
     <string name="passSum">The password</string>
-    <string name="maxCharsTitle">Maximum Characters</string>
-    <string name="maxCharsSum">Maximum number of characters</string>
-    <string name="maxPostsTitle">Posts</string>
-    <string name="maxPostsSum">Maximum number of posts shown in timeline</string>
-    <string name="fillRequiredPreferences">User and url required.</string>
     <string name="urlTitle">Url</string>
     <string name="urlSum">Site base url</string>
+    
+    <!--  Preferences Status Category -->
+    <string name="statusCatTitle">Status</string>
+    <string name="maxCharsTitle">Maximum Characters</string>
+    <string name="maxCharsSum">Maximum number of characters</string>
+    
+    <!--  Preferences Timeline Category -->
+    <string name="timelineCatTitle">Timeline</string>
+    <string name="maxPostsTitle">Posts</string>
+    <string name="maxPostsSum">Maximum number of posts shown in timeline</string>
     <string name="previewCharsTitle">Characters per post</string>
     <string name="previewCharsSum">Number of characters per post to display in timeline</string>
+    <string name="autoRefreshTitle">Automatic refresh</string>    
+    <string name="autoRefreshTimeTitle">Refresh period</string>
+	<string name="autoRefreshTimeSum">Time to refresh timeline automatically</string>
+    <string name="maxPostsStoredTitle"></string>
+    <string name="maxPostsStoredSum"></string>
+
     
     <!-- Menu strings -->
     <string name="menuTimeline">Timeline</string>
