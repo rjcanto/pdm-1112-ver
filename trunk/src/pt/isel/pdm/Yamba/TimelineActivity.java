@@ -7,8 +7,6 @@ import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.Status;
 
 import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
