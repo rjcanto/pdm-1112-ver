@@ -3,6 +3,7 @@ package pt.isel.pdm.Yamba;
 import java.util.List;
 
 import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.Twitter.Status;
 import winterwell.jtwitter.TwitterException;
 import android.app.Application;
 import android.app.ProgressDialog;
@@ -17,7 +18,8 @@ public class App extends Application implements OnPreferenceChangeListener {
 	public Button lastSubmit;
 	public TimelineActivity.StatusAdapter statusAdapter;
 	public ProgressDialog progressDialog;
-	public AsyncTaskResult<List<Twitter.Status>> timelineResult;
+	public List<Twitter.Status> timelineResult;
+	public TimelineActivity _timelineAct ;
 	
 	@Override
 	public void onCreate() {
@@ -38,6 +40,11 @@ public class App extends Application implements OnPreferenceChangeListener {
 		Log.d(TAG, "App.onPreferenceChanged");
 		if (sessionInvalidated)
 			_twitter = null;		
+	}
+	
+	public void onServiceNewTimelineResult(List<Status> list) {
+		timelineResult = list ;
+		//TODO: chamar método para actualizar adapter
 	}
 	
 	/** Returns the Twitter object */ 

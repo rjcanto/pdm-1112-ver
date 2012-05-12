@@ -38,12 +38,12 @@ public class TimelineActivity
 		_app = (App) getApplication() ;	
 		setContentView(R.layout.timeline);
 		
-		// Show current status list, if any
+	/*	// Show current status list, if any
 		if (_app.statusAdapter != null)
 			setListAdapter(_app.statusAdapter);
 		
-		/*// Was the screen rotated while retrieving timeline?
-		AsyncTaskResult<List<Twitter.Status>> timelineResult = _app.timelineResult;
+		// Was the screen rotated while retrieving timeline?
+		List<Twitter.Status> timelineResult = _app.timelineResult;
 		if (timelineResult == null)
 			return;
 		
@@ -56,8 +56,8 @@ public class TimelineActivity
 			Log.d(App.TAG, "TimelineActivity.onCreate: receive notification when task is complete");
 			_app.progressDialog = ProgressDialog.show(TimelineActivity.this, "", getString(R.string.tl_dialog_message),true);
 			timelineResult.setOnAsyncTaskDone(this);
-		}*/
-		
+		}
+		*/
 		Log.d(App.TAG, "TimelineActivity.onCreate: Calling TimelinePullService");
 		Intent intent = new Intent(this, TimelinePullService.class);
 		startService(intent);
