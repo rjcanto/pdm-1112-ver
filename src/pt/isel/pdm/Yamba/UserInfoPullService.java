@@ -13,13 +13,16 @@ import android.os.Message;
 import android.os.Process;
 import android.util.Log;
 
-public class TimelinePullService extends Service {
+public class UserInfoPullService extends Service {
 	private App _app;
 	private Handler _hMainThread;
 	private Looper _serviceLooper;
 	private ServiceHandler _serviceHandler;
 	
-	private final static int CODE_AUTO_UPDATE = 0;	
+	private final static int CODE_AUTO_UPDATE = 0;
+	private final static int Period = 5000;
+	private final static boolean AutoUpdate = true;
+	
 
 	// Handler that receives messages from the thread
 	private final class ServiceHandler extends Handler {
@@ -93,11 +96,11 @@ public class TimelinePullService extends Service {
 			return;
 		}
 		
-		if (_app.prefs().autoRefresh()) {
+		if (AutoUpdate) {
 			_serviceHandler.removeMessages(CODE_AUTO_UPDATE);
 			_serviceHandler.sendMessageDelayed(
 					_serviceHandler.obtainMessage(CODE_AUTO_UPDATE),
-					_app.prefs().autoRefreshTime());
+					Period);
 		}
 	}
 

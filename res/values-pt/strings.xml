@@ -47,6 +47,7 @@
     <string name="menuStatus">Estado</string>
     <string name="menuPrefs">Definições</string>
     <string name="menuTerminate">Sair</string>
+    <string name="menuUserInfo">Perfil</string>
     
     <!-- Timeline -->
     <string name="titleTimeline">Timeline</string>    
@@ -72,5 +73,12 @@
     <string name="detail_time">Criado Em</string>
     <string name="detail_id">Id Mensagem</string>
     <string name="detail_title">Detalhe</string>
+    
+    <!-- User Info -->
+    <string name="userInfo_title">Perfil</string>
+    <string name="userInfo_name">Nome:</string>
+    <string name="userInfo_statusCount">Mensagens:</string>
+    <string name="userInfo_nSubscribers">Subscritores:</string>
+    <string name="userInfo_nSubscriptions">Subscrições:</string>
     
 </resources>

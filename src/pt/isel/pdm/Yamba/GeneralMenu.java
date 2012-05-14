@@ -28,7 +28,11 @@ public class GeneralMenu {
 	public MenuItem refresh() {
 		return _menu.findItem(R.id.menuRefresh);
 	}
-
+	
+	public MenuItem userInfo() {
+		return _menu.findItem(R.id.menuUserInfo);
+	}
+	
 	public boolean processSelection(MenuItem item) {
 		Intent intent;
 		
@@ -57,6 +61,11 @@ public class GeneralMenu {
 				return false;
 			}
 			((TimelineActivity) _activity).refresh();			
+			return true;
+		case R.id.menuUserInfo:
+			intent = new Intent(_activity, UserInfoActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			_activity.startActivity(intent);
 			return true;
 		default:
 			Log.w(App.TAG, "Menu selection not processed");	

@@ -39,6 +39,15 @@ final class Preferences implements OnSharedPreferenceChangeListener {
 		_prefListeners.add(listener);
 	}
 	
+	/**
+     * Registers a callback to be invoked when a change happens to a preference.
+     * 
+     * @param listener The callback that will run.
+     */
+	public void unregisterOnPreferenceChangeListener(OnPreferenceChangeListener listener) {
+		_prefListeners.remove(listener);
+	}
+	
 	/** Notify all listeners that a preference was changed */
 	public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
 		Log.d(App.TAG, "Preferences.onSharedPreferenceChanged");

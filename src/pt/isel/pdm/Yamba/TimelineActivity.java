@@ -33,6 +33,7 @@ public class TimelineActivity
 		super.onCreate(savedInstanceState);
 		_app = (App) getApplication() ;	
 		_app._timelineAct = this ;
+		_app.prefs().registerOnPreferenceChangeListener(this);
 		setContentView(R.layout.timeline);
 		
 		if(_app._timelineResult != null)
@@ -71,11 +72,15 @@ public class TimelineActivity
 	@Override
 	protected void onDestroy() {
 		Log.d(App.TAG, "TimelineActivity.onDestroy");
-		_app._timelineAct = null ;
+		_app.prefs().unregisterOnPreferenceChangeListener(this);
+		
+		if (isFinishing()) {
+			Log.d(App.TAG, "TimelineActivity is finishing");
+			stopService(new Intent(this, TimelinePullService.class));
+		}
+		
 		super.onDestroy();
 	}
-
-
 
 	@Override
 	protected void onResume() {
@@ -131,6 +136,7 @@ public class TimelineActivity
 		_generalMenu.timeline().setVisible(false);
 		_generalMenu.status().setVisible(true);
 		_generalMenu.refresh().setVisible(true);
+		_generalMenu.userInfo().setVisible(true);
 		return true;
 	}
 
@@ -143,8 +149,6 @@ public class TimelineActivity
 	//new onTaskDone to work with TimelinePullService
 	public void onTaskDone(List<Twitter.Status> timeline) {
 		Log.d(App.TAG, "TimelineActivity.onTaskDone");
-		
-		
 	
 		if (_app.statusAdapter == null) {
 			Log.d(App.TAG, "TimelineActivity.onTaskDone: First time");
@@ -152,9 +156,7 @@ public class TimelineActivity
 		}
 		else {
 			Log.d(App.TAG, "TimelineActivity.onTaskDone: Refresh statusAdapter");
-			_app.statusAdapter.clear();
-			for (Status status : timeline)
-				_app.statusAdapter.add(status);
+			_app.statusAdapter.notifyDataSetChanged();
 		}
 		
 		if (_app.progressDialog != null &&_app.progressDialog.isShowing()) {
@@ -221,11 +223,13 @@ public class TimelineActivity
 			_app.statusAdapter = null;
 			return;
 		}
-		if (key == "maxPosts") {
+		if (key.equals("maxPosts")) {
 			_app.twitter().setCount(prefs.maxPosts());
 			return;
 		}
 		
+		if (key.equals("previewChars"))
+			_app.statusAdapter.notifyDataSetChanged();
 	}
 	
 	public String dateToAge(Date date) {

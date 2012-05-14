@@ -17,6 +17,9 @@
           android:title="@string/menuStatus">
     </item>
     <item android:id="@+id/menuRefresh" android:title="@string/menuRefresh" android:icon="@android:drawable/ic_menu_more"></item>
-    
+    <item android:id="@+id/menuUserInfo" 
+          android:icon="@android:drawable/ic_menu_my_calendar"
+          android:title="@string/menuUserInfo">
+    </item>
 
 </menu>
