@@ -47,6 +47,7 @@
     <string name="menuStatus">Status</string>
     <string name="menuPrefs">Settings</string>
     <string name="menuTerminate">Exit</string>
+    <string name="menuUserInfo">Profile</string>
     
     <!-- Timeline -->
     <string name="tl_dialog_message">Loading Timeline</string>
@@ -73,4 +74,10 @@
     <string name="detail_id">Message Id</string>
     <string name="detail_title">Detail</string>
     
+    <!-- UserInfo -->
+    <string name="userInfo_title">Profile</string>
+    <string name="userInfo_name">Name:</string>
+    <string name="userInfo_statusCount">Total posts:</string>
+    <string name="userInfo_nSubscribers">Subsribers:</string>
+    <string name="userInfo_nSubscriptions">Subscriptions:</string>
 </resources>

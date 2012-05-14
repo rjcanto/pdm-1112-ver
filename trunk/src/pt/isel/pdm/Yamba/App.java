@@ -8,6 +8,7 @@ import winterwell.jtwitter.TwitterException;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Button;
 
@@ -15,11 +16,13 @@ public class App extends Application implements OnPreferenceChangeListener {
 	public static final String TAG = "PDM";
 	private Preferences _prefs;
 	private Twitter _twitter;	
-	public Button lastSubmit;
+
 	public TimelineActivity.StatusAdapter statusAdapter;
 	public ProgressDialog progressDialog;
 	public List<Twitter.Status> _timelineResult;
 	public TimelineActivity _timelineAct ;
+	public StatusActivity statusAct;
+	public boolean sendingStatus;
 	
 	@Override
 	public void onCreate() {
@@ -29,7 +32,7 @@ public class App extends Application implements OnPreferenceChangeListener {
 		_prefs.registerOnPreferenceChangeListener(this);
 		
 	}
-
+	
 	/** Returns the Preferences object */
 	public Preferences prefs() {
 		return _prefs;
@@ -39,13 +42,32 @@ public class App extends Application implements OnPreferenceChangeListener {
 	public void onPreferenceChanged(Preferences sp, String key, boolean sessionInvalidated) {
 		Log.d(TAG, "App.onPreferenceChanged");
 		if (sessionInvalidated)
-			_twitter = null;		
+			_twitter = null;
+		
+		if (key.equals(!_prefs.autoRefresh())) {
+			stopService(new Intent(this, TimelinePullService.class));
+		}
 	}
 	
 	public void onServiceNewTimelineResult(List<Status> list) {
-		_timelineResult = list ;
+		if (_timelineResult == null)
+			_timelineResult = list;
+		else {
+			_timelineResult.clear();
+			_timelineResult.addAll(list);
+		}
 		if (_timelineAct != null)
 			_timelineAct.onTaskDone(_timelineResult) ;
+	}
+	
+	public void onServiceNewStatusSent(Status status) {
+		sendingStatus = false;
+		if (status != null) {
+			_timelineResult.add(0, status);
+			statusAdapter.notifyDataSetChanged();
+		}
+		if (statusAct != null)
+			statusAct.onStatusSent(status);
 	}
 	
 	/** Returns the Twitter object */ 
