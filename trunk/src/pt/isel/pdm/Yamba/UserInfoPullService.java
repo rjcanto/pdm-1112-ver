@@ -1,122 +1,69 @@
 package pt.isel.pdm.Yamba;
 
-import java.util.List;
-
 import winterwell.jtwitter.Twitter;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.Message;
-import android.os.Process;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
 
 public class UserInfoPullService extends Service {
+	
+	final Messenger _messenger = new Messenger(new ServiceHandler());
+	public static final int GET_USER_INFO = 1;
 	private App _app;
-	private Handler _hMainThread;
-	private Looper _serviceLooper;
-	private ServiceHandler _serviceHandler;
 	
-	private final static int CODE_AUTO_UPDATE = 0;
-	private final static int Period = 5000;
-	private final static boolean AutoUpdate = true;
-	
-
-	// Handler that receives messages from the thread
-	private final class ServiceHandler extends Handler {
-		public ServiceHandler(Looper looper) {
-			super(looper);
-		}
-
+	public class ServiceHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
-			onRefresh();
-		}
+			switch (msg.what) {
+				case GET_USER_INFO:
+					Log.d(App.TAG, "UserInfoPullService.handleMessage: GET_USER_INFO");
+					Messenger cliMessenger = msg.replyTo ;
+					Message response = Message.obtain() ;
+					Bundle _twitterBundle = new Bundle () ;
+					Twitter.User _twUser = _app.twitter().getUser(_app.prefs().user()) ;
+					_twitterBundle.putInt("nFollowers", _twUser.getFollowersCount()) ;
+					_twitterBundle.putInt("nFriends",_twUser.getFriendsCount()) ;
+					_twitterBundle.putInt("nStatus", _twUser.getStatusesCount()) ;
+					_twitterBundle.putString("name", _twUser.getName());
+					response.setData(_twitterBundle) ; 
+					try {
+						cliMessenger.send(response) ;
+					} catch (RemoteException e) {
+						Log.d(App.TAG, "UserInfoPullService.handleMessage Error");
+						e.printStackTrace();
+					}
+						
+					break;
+				default:
+					super.handleMessage(msg);
+			}
+		} 
 	}
-
+	
+	
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		_app = (App) getApplication();
-		_hMainThread = new Handler();
-
-		// Start up the thread running the service. We also make it
-		// background priority so CPU-intensive work will not disrupt our UI.
-		HandlerThread thread = new HandlerThread("ServiceStartArguments",
-				Process.THREAD_PRIORITY_BACKGROUND);
-		thread.start();
-
-		// Get the HandlerThread's Looper and use it for our Handler
-		_serviceLooper = thread.getLooper();
-		_serviceHandler = new ServiceHandler(_serviceLooper);
-
-	}
-
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.d(App.TAG, "TimelinePullService.onStartCommand");
-
-		// For each start request, send a message to start a job and deliver the
-		// start ID so we know which request we're stopping when we finish the
-		// job
-		Message msg = _serviceHandler.obtainMessage();
-		msg.arg1 = startId;
-		_serviceHandler.sendMessage(msg);
-
-		// If we get killed, after returning from here, restart
-		return START_STICKY;
+		_app = (App) getApplication() ;
+		Log.d(App.TAG, "UserInfoPullService.onCreate");
 	}
 	
-	private void onRefresh() {
-		Log.d(App.TAG, "TimelinePullService.onRefresh");
-		try {
-			final List<Twitter.Status> result = _app.twitter()
-					.getUserTimeline();
-			_hMainThread.post(new Runnable() {
-				public void run() {
-					_app.onServiceNewTimelineResult(result);
-				}
-			});
-
-		} catch (final Exception e) {
-			_hMainThread.post(new Runnable() {
-				// TODO differentiate errors?
-				public void run() {
-					Utils.showToast(getApplicationContext(),
-							getString(R.string.connectionError));
-				}
-			});
-			Log.d(App.TAG,
-					"TimelinePullService.onHandleIntent: Exception "
-							+ e.getMessage());
-			
-			stopSelf();
-			return;
-		}
-		
-		if (AutoUpdate) {
-			_serviceHandler.removeMessages(CODE_AUTO_UPDATE);
-			_serviceHandler.sendMessageDelayed(
-					_serviceHandler.obtainMessage(CODE_AUTO_UPDATE),
-					Period);
-		}
-	}
-
-	
-
 	@Override
 	public IBinder onBind(Intent intent) {
-		// We don't provide binding, so return null
-		return null;
+		Log.d(App.TAG, "UserInfoPullService.onBind");
+		return _messenger.getBinder();
 	}
 
 	@Override
 	public void onDestroy() {
-		Log.d(App.TAG, "TimelinePullService.onDestroy");		
-		_serviceLooper.quit();
-		_serviceHandler.removeMessages(CODE_AUTO_UPDATE);
+		Log.d(App.TAG, "UserInfoPullService.onDestroy");		
 		super.onDestroy();
 	}
 

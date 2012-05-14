@@ -2,8 +2,16 @@ package pt.isel.pdm.Yamba;
 
 import winterwell.jtwitter.Twitter.Status;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -23,6 +31,7 @@ public class UserInfoActivity extends Activity
 	private TextView _tvName, _tvStatusCount, _tvNSubscriptions, _tvNSubscribers;
 	private GeneralMenu _generalMenu;
 	private Intent _serviceIntent;
+	private boolean _bound;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -39,10 +48,9 @@ public class UserInfoActivity extends Activity
 		_tvStatusCount = (TextView) findViewById(R.id.userInfo_statusCount);
 		_tvNSubscriptions = (TextView) findViewById(R.id.userInfo_nSubscriptions);
 		_tvNSubscribers = (TextView) findViewById(R.id.userInfo_nSubscribers);
-
-		refresh(); // to onResume?
 	}
 	
+
 	@Override
 	protected void onDestroy() {
 		_app.prefs().unregisterOnPreferenceChangeListener(this);
@@ -53,16 +61,17 @@ public class UserInfoActivity extends Activity
 	protected void onResume() {
 		Log.d(App.TAG, "UserInfoActivity.onResume");
 		super.onResume();
-		//_app.statusAct = this;
-
-		
+		refresh();
 	}
 
 	@Override
 	protected void onPause() {
 		Log.d(App.TAG, "UserInfoActivity.onPause");
 		super.onPause();
-		//_app.statusAct = null;
+		if(_bound) {
+			Log.d(App.TAG, "UserInfoActivity.onPause: unbind");
+			unbindService(_connection) ;
+		}
 	}
 
 	/** Initialize options menu */
@@ -89,8 +98,46 @@ public class UserInfoActivity extends Activity
 			refresh();
 	}
 
+	private final Messenger _cliMessenger = new Messenger(new IncomingHandler()) ;
+	private Messenger _srvMessenger ;
+	
+    private ServiceConnection _connection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			_srvMessenger = new Messenger(service);
+            _bound = true;
+            Message msg = Message.obtain(null,UserInfoPullService.GET_USER_INFO) ;
+            msg.replyTo = _cliMessenger ;
+            
+            try {
+				_srvMessenger.send(msg) ;
+			} catch (RemoteException e) {
+				Log.d(App.TAG, "UserInfoActivity: ServiceConnection.onServiceConnected Error");
+				e.printStackTrace();
+			}
+		}
+
+		public void onServiceDisconnected(ComponentName name) {
+			_srvMessenger = null;
+			_bound = false;
+		}
+    };
+    
+    private class IncomingHandler extends Handler {
+
+		@Override
+		public void handleMessage(Message msg) {
+			Bundle _srvData = msg.getData() ;
+			_tvNSubscribers.setText(String.valueOf(_srvData.getInt("nFollowers"))) ;
+			_tvNSubscriptions.setText(String.valueOf(_srvData.getInt("nFriends"))) ;
+			_tvStatusCount.setText(String.valueOf(_srvData.getInt("nStatus"))) ; 
+			_tvName.setText(_srvData.getString("name")); 
+			super.handleMessage(msg);
+		}
+    	
+    }
+    
 	private void refresh() {
-		
+		bindService(new Intent(this, UserInfoPullService.class), _connection, Context.BIND_AUTO_CREATE) ;
 	}
 	
 	public void onRefreshDone(Status status) {

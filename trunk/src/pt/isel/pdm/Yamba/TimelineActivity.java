@@ -38,33 +38,6 @@ public class TimelineActivity
 		
 		if(_app._timelineResult != null)
 			this.onTaskDone(_app._timelineResult) ;
-		
-	/*	// Show current status list, if any
-		if (_app.statusAdapter != null)
-			setListAdapter(_app.statusAdapter);
-		
-		// Was the screen rotated while retrieving timeline?
-		List<Twitter.Status> timelineResult = _app.timelineResult;
-		if (timelineResult == null)
-			return;
-		
-		Log.d(App.TAG, "TimelineActivity.onCreate: screen was rotated while retrieving timeline");
-		if (timelineResult.isDone()) {
-			Log.d(App.TAG, "TimelineActivity.onCreate: task is done, process results"); 
-			onTaskDone(timelineResult);
-		}
-		else {
-			Log.d(App.TAG, "TimelineActivity.onCreate: receive notification when task is complete");
-			_app.progressDialog = ProgressDialog.show(TimelineActivity.this, "", getString(R.string.tl_dialog_message),true);
-			timelineResult.setOnAsyncTaskDone(this);
-		}
-		*/
-		
-		/*
-		Log.d(App.TAG, "TimelineActivity.onCreate: Calling TimelinePullService");
-		Intent intent = new Intent(this, TimelinePullService.class);
-		startService(intent);
-		*/
 	}
 	
 	
@@ -122,10 +95,6 @@ public class TimelineActivity
 		Log.d(App.TAG, "TimelineActivity.refresh: Calling TimelinePullService");
 		Intent intent = new Intent(this, TimelinePullService.class);
 		startService(intent);
-//		
-//		TimelineTask task = new TimelineTask(this);
-//		_app.timelineResult = task;
-//		task.execute();
 	}
 	
 	
