@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- StatusActivity -->
+    <string name="titleStatus">Atualização de Estado</string>    
+    <string name="hintText">Escreva o estado em %d caracteres</string>
+    <string name="buttonUpdate">Enviar</string>
+    <string name="buttonBusy">A ser enviado</string>
+    <string name="failMessage">Falha de publicação.\nError=%s</string>
+    <string name="successMessage">Publicação enviada.</string>
+    <string name="textViewAvailChars">Caracteres disponíveis:\u0020</string>
+    <string name="connectionError">Erro ao ligar ao servidor. Verifique o nome de utilizador, palavra-passe e URL.</string>
+    
+    <!--  Preferences -->
+    <string name="prefs_name">Preferências Yamba</string>
+    <string name="fillRequiredPreferences">Utilizador e URL necessários.</string>
+    
+    <!--  Preferences Credentials Category -->
+    <string name="credentialsCatTitle">Credenciais</string>
+    <string name="userTitle">Utilizador</string>
+    <string name="userSum">Nome do utilizador</string>
+    <string name="passTitle">Palavra-passe</string>
+    <string name="passSum">A palavra-passe</string>
+    <string name="urlTitle">Url</string>
+    <string name="urlSum">Url base do serviço </string>
+    
+    <!--  Preferences Status Category -->
+    <string name="statusCatTitle">Status</string>
+    <string name="maxCharsTitle">Máximo Caracteres</string>
+    <string name="maxCharsSum">Número máximo de caracteres</string>
+    
+    <!--  Preferences Timeline Category -->
+    <string name="timelineCatTitle">Timeline</string>
+    <string name="maxPostsTitle">Número mensagens visíveis</string>
+    <string name="maxPostsSum">Número máximo de mensagens visíveis na timeline</string>
+    <string name="previewCharsTitle">Caracteres por mensagem</string>
+    <string name="previewCharsSum">Número de caracteres da mensagem a mostrar na timeline</string>
+    <string name="autoRefreshTitle">Actualizações automáticas</string>    
+    <string name="autoRefreshTimeTitle">Período de actualização</string>
+	<string name="autoRefreshTimeSum">Tempo de intervalo entre actualizações</string>
+    <string name="maxPostsStoredTitle">Número mensagens guardadas</string>
+    <string name="maxPostsStoredSum">Número máximo mensagens guardadas</string>
+    
+    <!-- Menu strings -->
+    <string name="menuTimeline">Timeline</string> 
+    <string name="menuRefresh">Actualizar</string>
+    <string name="menuStatus">Estado</string>
+    <string name="menuPrefs">Definições</string>
+    <string name="menuTerminate">Sair</string>
+    <string name="menuUserInfo">Perfil</string>
+    
+    <!-- Timeline -->
+    <string name="titleTimeline">Timeline</string>    
+    <string name="tl_dialog_message">Actualizando Timeline</string>
+    
+    <!-- Timeline Items -->
+    <string name="tl_item_textmessage">Mensagem</string>
+    <string name="tl_item_textuser">Utilizador</string>
+    <string name="tl_item_texttime">Criado Em</string>
+    
+    <!-- Date terms -->
+    <string name="today">Hoje</string>
+    <string name="yesterday">Ontem</string>
+    <string name="daysAgo">Há %d dias</string>
+    
+    <!-- App -->
+    <string name="app_name">Yamba PDM</string>    
+    <string name="titleYamba">Yamba PDM</string>
+    
+    <!-- Detail -->
+    <string name="detail_user">Utilizador</string>
+    <string name="detail_message">Mensagem</string>
+    <string name="detail_time">Criado Em</string>
+    <string name="detail_id">Id Mensagem</string>
+    <string name="detail_title">Detalhe</string>
+    
+    <!-- User Info -->
+    <string name="userInfo_title">Perfil</string>
+    <string name="userInfo_name">Nome:</string>
+    <string name="userInfo_statusCount">Mensagens:</string>
+    <string name="userInfo_nSubscribers">Subscritores:</string>
+    <string name="userInfo_nSubscriptions">Subscrições:</string>
+    
+</resources>
