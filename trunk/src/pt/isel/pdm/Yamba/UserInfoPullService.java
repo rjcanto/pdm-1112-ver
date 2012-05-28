@@ -1,13 +1,20 @@
 package pt.isel.pdm.Yamba;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+
 import winterwell.jtwitter.Twitter;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -31,6 +38,20 @@ public class UserInfoPullService extends Service {
 					_twitterBundle.putInt("nFriends",_twUser.getFriendsCount()) ;
 					_twitterBundle.putInt("nStatus", _twUser.getStatusesCount()) ;
 					_twitterBundle.putString("name", _twUser.getName());
+										
+					try {
+						InputStream imageSrc;
+						imageSrc = _twUser.getProfileImageUrl().toURL().openStream();
+						Bitmap image = BitmapFactory.decodeStream(imageSrc);					
+						_twitterBundle.putParcelable("image", image);
+					} catch (MalformedURLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}					
+					
 					response.setData(_twitterBundle) ; 
 					try {
 						cliMessenger.send(response) ;

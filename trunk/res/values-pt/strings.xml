@@ -80,5 +80,6 @@
     <string name="userInfo_statusCount">Mensagens:</string>
     <string name="userInfo_nSubscribers">Subscritores:</string>
     <string name="userInfo_nSubscriptions">Subscrições:</string>
+    <string name="userInfo_image">Avatar:</string>
     
 </resources>

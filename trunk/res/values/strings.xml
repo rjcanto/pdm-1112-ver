@@ -80,4 +80,6 @@
     <string name="userInfo_statusCount">Total posts:</string>
     <string name="userInfo_nSubscribers">Subsribers:</string>
     <string name="userInfo_nSubscriptions">Subscriptions:</string>
+    <string name="userInfo_image">Avatar:</string>
+    
 </resources>
