@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class UserInfoActivity extends Activity 
@@ -29,6 +31,7 @@ public class UserInfoActivity extends Activity
 	
 	private App _app;
 	private TextView _tvName, _tvStatusCount, _tvNSubscriptions, _tvNSubscribers;
+	private ImageView _ivProfile;
 	private GeneralMenu _generalMenu;
 	private Intent _serviceIntent;
 	private boolean _bound;
@@ -48,6 +51,7 @@ public class UserInfoActivity extends Activity
 		_tvStatusCount = (TextView) findViewById(R.id.userInfo_statusCount);
 		_tvNSubscriptions = (TextView) findViewById(R.id.userInfo_nSubscriptions);
 		_tvNSubscribers = (TextView) findViewById(R.id.userInfo_nSubscribers);
+		_ivProfile = (ImageView) findViewById(R.id.profileImage);
 	}
 	
 
@@ -130,7 +134,8 @@ public class UserInfoActivity extends Activity
 			_tvNSubscribers.setText(String.valueOf(_srvData.getInt("nFollowers"))) ;
 			_tvNSubscriptions.setText(String.valueOf(_srvData.getInt("nFriends"))) ;
 			_tvStatusCount.setText(String.valueOf(_srvData.getInt("nStatus"))) ; 
-			_tvName.setText(_srvData.getString("name")); 
+			_tvName.setText(_srvData.getString("name"));
+			_ivProfile.setImageBitmap((Bitmap) _srvData.getParcelable("image"));
 			super.handleMessage(msg);
 		}
     	
