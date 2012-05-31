@@ -4,7 +4,9 @@ import java.util.List;
 
 import winterwell.jtwitter.Twitter;
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -18,6 +20,9 @@ public class TimelinePullService extends Service {
 	private Handler _hMainThread;
 	private Looper _serviceLooper;
 	private ServiceHandler _serviceHandler;
+	
+	private DbHelper _dbHelper;
+	private SQLiteDatabase _database;
 	
 	private final static int CODE_AUTO_UPDATE = 0;	
 
@@ -48,6 +53,8 @@ public class TimelinePullService extends Service {
 		// Get the HandlerThread's Looper and use it for our Handler
 		_serviceLooper = thread.getLooper();
 		_serviceHandler = new ServiceHandler(_serviceLooper);
+		
+		_dbHelper = new DbHelper(this);
 
 	}
 
@@ -69,14 +76,31 @@ public class TimelinePullService extends Service {
 	private void onRefresh() {
 		Log.d(App.TAG, "TimelinePullService.onRefresh");
 		try {
-			final List<Twitter.Status> result = _app.twitter()
-					.getUserTimeline();
+			final List<Twitter.Status> timeline = _app.twitter().getUserTimeline();
 			_hMainThread.post(new Runnable() {
 				public void run() {
-					_app.onServiceNewTimelineResult(result);
+					_app.onServiceNewTimelineResult(timeline);
 				}
 			});
 
+			// Update DB
+			_database = _dbHelper.getWritableDatabase();
+			 
+			ContentValues values = new ContentValues();
+			
+			for (Twitter.Status status : timeline) {// Insert into database
+				values.clear(); //
+				values.put(TimelineContract._ID, status.id);
+				values.put(TimelineContract.CREATED_AT, status.createdAt.getTime());
+				values.put(TimelineContract.AUTHOR_ID, status.user.id);
+				values.put(TimelineContract.IS_READ, true);
+				values.put(TimelineContract.TEXT, status.text);				
+				_database.insertOrThrow(TimelineContract.TABLE, null, values);
+				_database.insertWithOnConflict(TimelineContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+			}
+			// Close the database
+			_database.close();
+			
 		} catch (final Exception e) {
 			_hMainThread.post(new Runnable() {
 				// TODO differentiate errors?
