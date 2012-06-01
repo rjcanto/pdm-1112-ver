@@ -15,8 +15,12 @@ import android.widget.Button;
 public class App extends Application implements OnPreferenceChangeListener {
 	public static final String TAG = "PDM";
 	private Preferences _prefs;
-	private Twitter _twitter;	
+	private Twitter _twitter;
+	private PdmDb _pdmDb;
 
+	/**
+	 * Shared state
+	 */
 	public TimelineActivity.StatusAdapter statusAdapter;
 	public ProgressDialog progressDialog;
 	public List<Twitter.Status> _timelineResult;
@@ -24,13 +28,19 @@ public class App extends Application implements OnPreferenceChangeListener {
 	public StatusActivity statusAct;
 	public boolean sendingStatus;
 	
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		Log.d(App.TAG, "App.onCreate");
 		_prefs = new Preferences(getApplicationContext());
 		_prefs.registerOnPreferenceChangeListener(this);
-		
+		_pdmDb = new PdmDb(this);
+	}
+	
+	/** Returns the DAL object */	
+	public PdmDb db() {
+		return _pdmDb;
 	}
 	
 	/** Returns the Preferences object */
@@ -49,15 +59,8 @@ public class App extends Application implements OnPreferenceChangeListener {
 		}
 	}
 	
-	public void onServiceNewTimelineResult(List<Status> list) {
-		if (_timelineResult == null)
-			_timelineResult = list;
-		else {
-			_timelineResult.clear();
-			_timelineResult.addAll(list);
-		}
-		if (_timelineAct != null)
-			_timelineAct.onTaskDone(_timelineResult) ;
+	public void onServiceNewTimelineResult() {
+		_timelineAct.onTaskDone();
 	}
 	
 	public void onServiceNewStatusSent(Status status) {

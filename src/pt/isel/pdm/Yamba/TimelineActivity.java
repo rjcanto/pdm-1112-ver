@@ -9,6 +9,7 @@ import winterwell.jtwitter.Twitter.Status;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 public class TimelineActivity 
@@ -34,10 +36,9 @@ public class TimelineActivity
 		_app = (App) getApplication() ;	
 		_app._timelineAct = this ;
 		_app.prefs().registerOnPreferenceChangeListener(this);
-		setContentView(R.layout.timeline);
+		setContentView(R.layout.timeline);		
 		
-		if(_app._timelineResult != null)
-			this.onTaskDone(_app._timelineResult) ;
+		onTaskDone() ;
 	}
 	
 	
@@ -116,9 +117,19 @@ public class TimelineActivity
 	}
 		
 	//new onTaskDone to work with TimelinePullService
-	public void onTaskDone(List<Twitter.Status> timeline) {
+	public void onTaskDone() {
 		Log.d(App.TAG, "TimelineActivity.onTaskDone");
 	
+		Cursor c = _app.db().getAllStatus();
+		startManagingCursor(c);
+		
+		setListAdapter(new SimpleCursorAdapter(this,
+				R.layout.timeline_item, //layout
+				c,
+				new String[] {TimelineContract.AUTHOR_ID, TimelineContract.TEXT, TimelineContract.CREATED_AT },
+				new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime }));
+		
+		/*
 		if (_app.statusAdapter == null) {
 			Log.d(App.TAG, "TimelineActivity.onTaskDone: First time");
 			_app.statusAdapter = new StatusAdapter(this, R.layout.timeline_item, timeline);
@@ -133,7 +144,7 @@ public class TimelineActivity
 			_app.progressDialog = null;
         }
 		
-		setListAdapter(_app.statusAdapter);
+		setListAdapter(_app.statusAdapter);*/
 	}
 	
 	class StatusAdapter extends ArrayAdapter<Twitter.Status> implements OnClickListener {		
@@ -184,7 +195,6 @@ public class TimelineActivity
 		}   	
 	}
 
-	
 	
 	public void onPreferenceChanged(Preferences prefs, String key, boolean sessionInvalidated) {
 		Log.d(App.TAG, "TimelineActivity.onPreferenceChanged");

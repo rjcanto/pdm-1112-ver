@@ -1,10 +1,9 @@
 package pt.isel.pdm.Yamba;
 
-import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class TimelineContract {
-	public static final String TABLE 	= "UC";
+	public static final String TABLE 	= "Timeline";
 	//public static final Uri CONTENT_URI = Uri.withAppendedPath(LeicProvider.CONTENT_URI, TABLE);
 	
 	public static final String 
@@ -12,5 +11,6 @@ public class TimelineContract {
   	  CREATED_AT 	= "createdAt",
 	  TEXT 			= "text",
 	  IS_READ	 	= "isRead",
-	  AUTHOR_ID		= "authorId";
+	  AUTHOR_ID		= "authorId",
+	  AUTHOR_NAME	= "authorName";
 }
