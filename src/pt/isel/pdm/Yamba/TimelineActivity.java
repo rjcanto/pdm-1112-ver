@@ -126,7 +126,7 @@ public class TimelineActivity
 		setListAdapter(new SimpleCursorAdapter(this,
 				R.layout.timeline_item, //layout
 				c,
-				new String[] {TimelineContract.AUTHOR_ID, TimelineContract.TEXT, TimelineContract.CREATED_AT },
+				new String[] {TimelineContract.AUTHOR_NAME, TimelineContract.TEXT, TimelineContract.CREATED_AT },
 				new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime }));
 		
 		/*
