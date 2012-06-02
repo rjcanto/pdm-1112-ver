@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,16 +19,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
+import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 public class TimelineActivity 
 	extends ListActivity
-	implements OnPreferenceChangeListener {
+	implements OnPreferenceChangeListener, ViewBinder, OnItemClickListener {
 
 	private App _app;
 	private GeneralMenu _generalMenu;
+	private Cursor _c;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,8 @@ public class TimelineActivity
 		_app.prefs().registerOnPreferenceChangeListener(this);
 		setContentView(R.layout.timeline);		
 		
+		getListView().setOnItemClickListener(this);
+		
 		onTaskDone() ;
 	}
 	
@@ -47,6 +55,9 @@ public class TimelineActivity
 	protected void onDestroy() {
 		Log.d(App.TAG, "TimelineActivity.onDestroy");
 		_app.prefs().unregisterOnPreferenceChangeListener(this);
+		
+		if (_c != null)
+			_c.close();
 		
 		if (isFinishing()) {
 			Log.d(App.TAG, "TimelineActivity is finishing");
@@ -120,14 +131,19 @@ public class TimelineActivity
 	public void onTaskDone() {
 		Log.d(App.TAG, "TimelineActivity.onTaskDone");
 	
-		Cursor c = _app.db().getAllStatus();
-		startManagingCursor(c);
+		_c = _app.db().getAllStatus();
+		startManagingCursor(_c);
 		
-		setListAdapter(new SimpleCursorAdapter(this,
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				R.layout.timeline_item, //layout
-				c,
+				_c,
 				new String[] {TimelineContract.AUTHOR_NAME, TimelineContract.TEXT, TimelineContract.CREATED_AT },
-				new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime }));
+				new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime });
+		
+		adapter.setViewBinder(this);
+		setListAdapter(adapter);
+		
+		//setListAdapter(new TimelineAdapter(_app, this, _c));
 		
 		/*
 		if (_app.statusAdapter == null) {
@@ -147,7 +163,8 @@ public class TimelineActivity
 		setListAdapter(_app.statusAdapter);*/
 	}
 	
-	class StatusAdapter extends ArrayAdapter<Twitter.Status> implements OnClickListener {		
+	class StatusAdapter extends ArrayAdapter<Twitter.Status> implements OnClickListener {
+
 		int _position ;
 		
 		public StatusAdapter(Context context, int textViewResourceId, List<Twitter.Status> objects) {
@@ -167,7 +184,7 @@ public class TimelineActivity
 
    			TextView tvTime = (TextView) convertView.findViewById(R.id.tl_item_textTime);
    			Date itemDate = getItem(position).getCreatedAt();
-   			tvTime.setText(dateToAge(itemDate));
+   			//tvTime.setText(dateToAge(itemDate));
 
    			TextView tvMessage = (TextView) convertView.findViewById(R.id.tl_item_textMessage);
    			
@@ -196,6 +213,48 @@ public class TimelineActivity
 	}
 
 	
+	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		// Skip if this value doesn't need special treatment
+		int id = view.getId();
+		
+		switch (id) {
+		case R.id.tl_item_textTime:
+			// Convert timestamp to relative date
+			TextView statusAge = (TextView) view;
+			long createdAt = cursor.getLong(cursor.getColumnIndex(TimelineContract.CREATED_AT));		
+			statusAge.setText(DateUtils.getRelativeTimeSpanString(createdAt));
+			break;
+		case R.id.tl_item_textMessage:
+			// Limit number of preview chars
+			TextView status = (TextView) view;
+			String statusText = cursor.getString(cursor.getColumnIndex(TimelineContract.TEXT));
+			int previewChars = _app.prefs().previewChars(); 
+			int length = (previewChars > statusText.length()) ? statusText.length() : previewChars;
+			status.setText(statusText.substring(0, length));
+			break;
+		default:
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		Log.d(App.TAG, "TimelineAdapter.onItemClick");
+		
+		// Show clicked status in DetailActivity
+		Cursor c = (Cursor) parent.getItemAtPosition(position);
+		
+		Intent intent = new Intent(this, DetailActivity.class);
+		intent.putExtra("detailTextUser", c.getString(c.getColumnIndex(TimelineContract.AUTHOR_NAME)));
+		intent.putExtra("detailTextMessage", c.getString(c.getColumnIndex(TimelineContract.TEXT)));
+		intent.putExtra("detailTextTime",  c.getLong(c.getColumnIndex(TimelineContract.CREATED_AT)));
+		intent.putExtra("detailTextId", "#" + c.getLong(c.getColumnIndex(TimelineContract._ID)));
+		
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);		
+		startActivity(intent);		
+	}
+
 	public void onPreferenceChanged(Preferences prefs, String key, boolean sessionInvalidated) {
 		Log.d(App.TAG, "TimelineActivity.onPreferenceChanged");
 		if (sessionInvalidated) {
@@ -211,16 +270,4 @@ public class TimelineActivity
 			_app.statusAdapter.notifyDataSetChanged();
 	}
 	
-	public String dateToAge(Date date) {
-		final int secondsInADay = 60 * 60 * 24;
-		
-		Date now = new Date();
-		long days = (now.getTime() - date.getTime()) / secondsInADay;
-		
-		if (days == 0)
-			return getString(R.string.today);
-		if (days == 1)
-			return getString(R.string.yesterday);
-		return getString(R.string.daysAgo, days);
-	}
 }

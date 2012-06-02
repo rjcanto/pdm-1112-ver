@@ -1,7 +1,10 @@
 package pt.isel.pdm.Yamba;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.widget.TextView;
 
 public class DetailActivity extends Activity{
@@ -19,7 +22,8 @@ public class DetailActivity extends Activity{
 		detailTextMessage.setText(bundle.getString("detailTextMessage")) ;
 		
 		TextView detailTextTime = (TextView) findViewById(R.id.detail_textTime);
-		detailTextTime.setText(bundle.getString("detailTextTime")) ;
+		long createdAt = bundle.getLong("detailTextTime");
+		detailTextTime.setText(new Date(createdAt).toLocaleString());
 		
 		TextView detailTextId = (TextView) findViewById(R.id.detail_textId);
 		detailTextId.setText(bundle.getString("detailTextId")) ;

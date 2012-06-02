@@ -2,7 +2,6 @@ package pt.isel.pdm.Yamba;
 
 import java.util.List;
 
-import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.Status;
 import android.content.ContentValues;
 import android.content.Context;
@@ -30,13 +29,13 @@ public class PdmDb {
 		public void onCreate(SQLiteDatabase db) {
 			String columns = TimelineContract._ID + " bigint primary key, "
 					       + TimelineContract.AUTHOR_ID + " bigint not null, " // foreign key?
-					       + TimelineContract.AUTHOR_NAME + " text not null"
+					       + TimelineContract.AUTHOR_NAME + " text not null, "
 					       + TimelineContract.CREATED_AT + " datetime not null, "
 					       + TimelineContract.TEXT + " text not null, "
 					       + TimelineContract.IS_READ + " boolean not null";
-			String sql = "CREATE TABLE "+ TimelineContract.TABLE + "( "+ columns + " )";
-			db.execSQL(sql);
+			String sql = "CREATE TABLE "+ TimelineContract.TABLE + "( "+ columns + " )";			
 			Utils.Log("DbHelper.onCreate: sql = " + sql);
+			db.execSQL(sql);
 		}
 
 		@Override
@@ -54,6 +53,11 @@ public class PdmDb {
 	}
 	
 	
+	/** Open a connection to the database */
+	public SQLiteDatabase open(boolean isReadOnly) {
+		return isReadOnly ? _dbHelper.getReadableDatabase() : _dbHelper.getWritableDatabase();
+	}
+	
 	/** Gets a cursor to access all of the Status in the database. */
 	public Cursor getAllStatus() {
 		Utils.Log("PdmDb.getAllStatus");
@@ -69,12 +73,15 @@ public class PdmDb {
 	public void insertStatus(List<Status> timeline) {
 		Utils.Log(String.format("PdmDb.insertStatus (%d)", timeline.size()));
 		SQLiteDatabase db = _dbHelper.getWritableDatabase();
+		db.beginTransaction();
 		try { 
 			ContentValues values = new ContentValues();			
 			for (Status status : timeline)
 				insertStatus(db, values, status);
+			db.setTransactionSuccessful();
 		}
 		finally {
+			db.endTransaction();
 			db.close();
 		}
 	}
