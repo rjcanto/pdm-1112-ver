@@ -9,6 +9,8 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Button;
 
@@ -17,6 +19,8 @@ public class App extends Application implements OnPreferenceChangeListener {
 	private Preferences _prefs;
 	private Twitter _twitter;
 	private PdmDb _pdmDb;
+	private ConnectivityManager _connMan = null;
+	private NetworkInfo _netInfo = null;
 
 	/**
 	 * Shared state
@@ -27,12 +31,14 @@ public class App extends Application implements OnPreferenceChangeListener {
 	public TimelineActivity _timelineAct ;
 	public StatusActivity statusAct;
 	public boolean sendingStatus;
+	public boolean isPendingStatus;
 	
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		Log.d(App.TAG, "App.onCreate");
+		isPendingStatus = false ;
 		_prefs = new Preferences(getApplicationContext());
 		_prefs.registerOnPreferenceChangeListener(this);
 		_pdmDb = new PdmDb(this);
@@ -60,15 +66,16 @@ public class App extends Application implements OnPreferenceChangeListener {
 	}
 	
 	public void onServiceNewTimelineResult() {
-		_timelineAct.onTaskDone();
+		if(_timelineAct != null)
+			_timelineAct.onTaskDone();
 	}
 	
 	public void onServiceNewStatusSent(Status status) {
 		sendingStatus = false;
-		if (status != null) {
-			_timelineResult.add(0, status);
-			statusAdapter.notifyDataSetChanged();
-		}
+//		if (status != null) {
+//			_timelineResult.add(0, status);
+//			statusAdapter.notifyDataSetChanged();
+//		}
 		if (statusAct != null)
 			statusAct.onStatusSent(status);
 	}
@@ -93,5 +100,12 @@ public class App extends Application implements OnPreferenceChangeListener {
 	/** Returns application context */
 	public Context context() {
 		return getApplicationContext();
-	}	
+	}
+	
+	public boolean isNetworkAvailable() {
+		if (_connMan==null) 
+			_connMan = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE) ;
+		_netInfo = _connMan.getActiveNetworkInfo();
+		return _netInfo!=null && _netInfo.isConnected();
+	}
 }
