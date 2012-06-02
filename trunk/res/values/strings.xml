@@ -7,6 +7,7 @@
     <string name="buttonBusy">Updating</string>
     <string name="failMessage">Update failed.\nError=%s</string>
     <string name="successMessage">Update sent.</string>
+    <string name="statusOfflineMessage">No data connection. Message saved for later send</string>
     <string name="textViewAvailChars">Available characters:\u0020</string>
     <string name="connectionError">Error connecting to server. Check username, password and URL.</string>
     
