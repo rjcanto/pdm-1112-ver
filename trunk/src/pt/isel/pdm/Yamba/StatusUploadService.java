@@ -5,11 +5,7 @@ import java.util.List;
 import winterwell.jtwitter.Twitter.Status;
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Handler;
 import android.util.Log;
 
@@ -33,7 +29,6 @@ public class StatusUploadService extends IntentService {
 
 	@Override
 	public void onDestroy() {
-		//unregisterReceiver(_rec);
 		super.onDestroy();
 	}
 
@@ -42,7 +37,7 @@ public class StatusUploadService extends IntentService {
 		Log.d(App.TAG, "StatusUpload.onHandleIntent");
 		String statusText = intent.getStringExtra("statusText");
 					
-		//Runnable run;
+		Runnable run;
 
 		if (statusText == null) {
 			List<String> offlineStatusList = _app.db().getOfflineStatus() ;
@@ -52,7 +47,18 @@ public class StatusUploadService extends IntentService {
 			}
 			
 		} else {
-			sendStatus(statusText) ;
+			if (_app.isNetworkAvailable())
+				sendStatus(statusText) ;
+			else {
+				Log.d(App.TAG, "StatusUpload.onHandleIntent - Storing Status in DB");
+				_app.db().insertOfflineStatus(statusText) ;
+				run = new Runnable() {
+					public void run() {
+						Utils.showToast(_app.context(), getString(R.string.statusOfflineMessage));
+						_app.onServiceNewStatusSent(null);
+					}
+				};
+			}
 		}		
 	}
 	
@@ -79,21 +85,4 @@ public class StatusUploadService extends IntentService {
 		}
 		_hMainThread.post(run);
 	}
-//	
-//	class StatusReceiver extends BroadcastReceiver{
-//
-//		App _app ;
-//		
-//		@Override
-//		public void onReceive(Context context, Intent intent) {
-//			//String action = intent.getAction() ;
-//			_app = (App) getApplication();
-//			boolean connect = ! intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-//			Log.d(App.TAG, "StatusReceiver.onReceive Connectivity="+connect);
-//			
-//		}
-//		
-//
-//	}
-
 }
