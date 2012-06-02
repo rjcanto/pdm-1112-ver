@@ -3,6 +3,8 @@ package pt.isel.pdm.Yamba;
 import java.util.Date;
 import java.util.List;
 
+import pt.isel.pdm.Yamba.database.TimelineContract;
+
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.Status;
 

@@ -1,7 +1,9 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.database;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import pt.isel.pdm.Yamba.Utils;
 
 import winterwell.jtwitter.Twitter.Status;
 import android.content.ContentValues;
@@ -34,7 +36,14 @@ public class PdmDb {
 					       + TimelineContract.CREATED_AT + " datetime not null, "
 					       + TimelineContract.TEXT + " text not null, "
 					       + TimelineContract.IS_READ + " boolean not null";
-			String sql = "CREATE TABLE "+ TimelineContract.TABLE + "( "+ columns + " )";			
+			String sql = "CREATE TABLE "+ TimelineContract.TABLE + "( "+ columns + " )";
+			Utils.Log("DbHelper.onCreate: sql = " + sql);
+			db.execSQL(sql);
+						
+			columns =	StatusOfflineContract._ID + " bigint primary key, "
+					+	StatusOfflineContract.TEXT + " text not null";
+			sql = "CREATE TABLE "+ StatusOfflineContract.TABLE + "( "+ columns + " )";
+			
 			Utils.Log("DbHelper.onCreate: sql = " + sql);
 			db.execSQL(sql);
 		}
@@ -112,13 +121,17 @@ public class PdmDb {
 	
 	public List<String> getOfflineStatus() {
 		List<String> result = new ArrayList<String>();
-		//TODO
-		// 1) Get Status
-		// 2) Clean Table
-		result.add("StatusOffline 1") ;
-		result.add("StatusOffline 2") ;
-		result.add("StatusOffline 3") ;
-		result.add("StatusOffline 4") ;
+		SQLiteDatabase db = _dbHelper.getReadableDatabase();
+		Cursor statusCursor = db.rawQuery("select text from StatusOffline", null); 
+		
+		statusCursor.moveToFirst();
+        while (statusCursor.isAfterLast() == false) {
+        	result.add(statusCursor.getString(1));
+       	    statusCursor.moveToNext();
+        }
+		
+		statusCursor.close() ;
+		db.close();
 		return result;
 	}
 }
