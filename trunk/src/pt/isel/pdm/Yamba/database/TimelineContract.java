@@ -1,4 +1,4 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.database;
 
 import android.provider.BaseColumns;
 

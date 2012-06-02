@@ -2,6 +2,8 @@ package pt.isel.pdm.Yamba;
 
 import java.util.List;
 
+import pt.isel.pdm.Yamba.database.PdmDb;
+
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.Status;
 import winterwell.jtwitter.TwitterException;
