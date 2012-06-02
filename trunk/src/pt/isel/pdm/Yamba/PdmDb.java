@@ -1,5 +1,6 @@
 package pt.isel.pdm.Yamba;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import winterwell.jtwitter.Twitter.Status;
@@ -107,5 +108,17 @@ public class PdmDb {
 		values.put(TimelineContract.IS_READ, true);
 		values.put(TimelineContract.TEXT, status.text);
 		db.insertWithOnConflict(TimelineContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+	}
+	
+	public List<String> getOfflineStatus() {
+		List<String> result = new ArrayList<String>();
+		//TODO
+		// 1) Get Status
+		// 2) Clean Table
+		result.add("StatusOffline 1") ;
+		result.add("StatusOffline 2") ;
+		result.add("StatusOffline 3") ;
+		result.add("StatusOffline 4") ;
+		return result;
 	}
 }
