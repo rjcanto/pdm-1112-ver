@@ -40,7 +40,7 @@ public class PdmDb {
 			Utils.Log("DbHelper.onCreate: sql = " + sql);
 			db.execSQL(sql);
 						
-			columns =	StatusOfflineContract._ID + " bigint primary key, "
+			columns =	StatusOfflineContract._ID + " bigint primary key autoincrement, "
 					+	StatusOfflineContract.TEXT + " text not null";
 			sql = "CREATE TABLE "+ StatusOfflineContract.TABLE + "( "+ columns + " )";
 			
@@ -129,9 +129,15 @@ public class PdmDb {
         	result.add(statusCursor.getString(1));
        	    statusCursor.moveToNext();
         }
-		
+		db.delete(StatusOfflineContract.TABLE, null, null) ;
 		statusCursor.close() ;
 		db.close();
 		return result;
+	}
+	
+	public void insertOfflineStatus(String msg) {
+		ContentValues values = new ContentValues();
+		values.put(StatusOfflineContract.TEXT, msg);
+		_dbHelper.getReadableDatabase().insert(StatusOfflineContract.TABLE, null, values); 
 	}
 }

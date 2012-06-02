@@ -8,6 +8,7 @@
     <string name="buttonBusy">A ser enviado</string>
     <string name="failMessage">Falha de publicação.\nError=%s</string>
     <string name="successMessage">Publicação enviada.</string>
+    <string name="statusOfflineMessage">Sem ligação dados. Mensagem guardada para envio posterior</string>
     <string name="textViewAvailChars">Caracteres disponíveis:\u0020</string>
     <string name="connectionError">Erro ao ligar ao servidor. Verifique o nome de utilizador, palavra-passe e URL.</string>
     
