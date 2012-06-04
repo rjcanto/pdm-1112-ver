@@ -1,8 +1,10 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.services;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+
+import pt.isel.pdm.Yamba.App;
 
 import winterwell.jtwitter.Twitter;
 import android.app.Service;

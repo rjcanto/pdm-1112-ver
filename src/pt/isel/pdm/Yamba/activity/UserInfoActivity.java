@@ -1,5 +1,13 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.activity;
 
+import pt.isel.pdm.Yamba.App;
+import pt.isel.pdm.Yamba.R;
+import pt.isel.pdm.Yamba.R.id;
+import pt.isel.pdm.Yamba.R.layout;
+import pt.isel.pdm.Yamba.services.UserInfoPullService;
+import pt.isel.pdm.Yamba.util.GeneralMenu;
+import pt.isel.pdm.Yamba.util.OnPreferenceChangeListener;
+import pt.isel.pdm.Yamba.util.Preferences;
 import winterwell.jtwitter.Twitter.Status;
 import android.app.Activity;
 import android.content.ComponentName;

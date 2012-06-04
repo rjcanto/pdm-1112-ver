@@ -1,9 +1,19 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.activity;
 
 import java.util.Date;
 import java.util.List;
 
+import pt.isel.pdm.Yamba.App;
+import pt.isel.pdm.Yamba.R;
+import pt.isel.pdm.Yamba.R.id;
+import pt.isel.pdm.Yamba.R.layout;
+import pt.isel.pdm.Yamba.R.string;
 import pt.isel.pdm.Yamba.database.TimelineContract;
+import pt.isel.pdm.Yamba.services.TimelinePullService;
+import pt.isel.pdm.Yamba.util.GeneralMenu;
+import pt.isel.pdm.Yamba.util.OnPreferenceChangeListener;
+import pt.isel.pdm.Yamba.util.Preferences;
+import pt.isel.pdm.Yamba.util.Utils;
 
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.Status;
@@ -12,6 +22,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -35,20 +46,27 @@ public class TimelineActivity
 
 	private App _app;
 	private GeneralMenu _generalMenu;
-	private Cursor _c;
+	private SQLiteDatabase _db;
+	private Cursor _cursor;
+	private Intent _timelinePullServiceIntent;
+	
+	/**
+	 * Android overrides
+	 */
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(App.TAG, "TimelineActivity.onCreate");
 		super.onCreate(savedInstanceState);
+		
+		setContentView(R.layout.timeline);
+		
 		_app = (App) getApplication() ;	
-		_app._timelineAct = this ;
-		_app.prefs().registerOnPreferenceChangeListener(this);
-		setContentView(R.layout.timeline);		
-		
+		_app.prefs().registerOnPreferenceChangeListener(this);	
 		getListView().setOnItemClickListener(this);
-		
-		onTaskDone() ;
+				
+		_timelinePullServiceIntent = new Intent(this, TimelinePullService.class);
+		//onTaskDone() ;
 	}
 	
 	
@@ -56,36 +74,54 @@ public class TimelineActivity
 	@Override
 	protected void onDestroy() {
 		Log.d(App.TAG, "TimelineActivity.onDestroy");
-		_app.prefs().unregisterOnPreferenceChangeListener(this);
-		
-		if (_c != null)
-			_c.close();
 		
 		if (isFinishing()) {
 			Log.d(App.TAG, "TimelineActivity is finishing");
 			stopService(new Intent(this, TimelinePullService.class));
-		}
+		}		
+		
+		_app.prefs().unregisterOnPreferenceChangeListener(this);
 		
 		super.onDestroy();
+		
+		if (_db != null)
+			_db.close();
 	}
 
 	@Override
 	protected void onResume() {
 		Log.d(App.TAG, "TimelineActivity.onResume");
 		super.onResume();
-		_app._timelineAct = this ;
-		if (_app.statusAdapter == null)
+		
+		_app.timelineAct = this;
+		
+		if (!_app.timelineRetrieved)
 			refresh();
+		
+		/*if (_db == null) {
+			_db = _app.db().openReadableDb(); 
+			_cursor = _app.db().getAllStatus(_db);
+			startManagingCursor(_cursor);
+			
+			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+					R.layout.timeline_item, //layout
+					_cursor,
+					new String[] {TimelineContract.AUTHOR_NAME, TimelineContract.TEXT, TimelineContract.CREATED_AT },
+					new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime });
+			
+			adapter.setViewBinder(this);
+			setListAdapter(adapter);
+		}*/
+		//if (_app.statusAdapter == null)
+		//	refresh();
 	}
 	
 	@Override
 	protected void onPause() {
 		Log.d(App.TAG, "TimelineActivity.onPause");
-		_app._timelineAct = null ;
 		super.onPause();
+		_app.timelineAct = null;
 	}
-
-
 
 	@Override
 	protected void onStop() {
@@ -95,22 +131,6 @@ public class TimelineActivity
 			_app.progressDialog = null;
         }
 	}
-
-	public void refresh() {
-		Log.d(App.TAG, "TimelineActivity.refresh");
-		
-		if (!_app.prefs().hasRequired()) {
-			Log.d(App.TAG, "Required preferences are missing");
-			Utils.showToast(_app.context(), getString(R.string.fillRequiredPreferences));
-			startActivity(new Intent(this, PrefsActivity.class));
-			return;
-		}
-		
-		Log.d(App.TAG, "TimelineActivity.refresh: Calling TimelinePullService");
-		Intent intent = new Intent(this, TimelinePullService.class);
-		startService(intent);
-	}
-	
 	
 	/** Initialize options menu */
 	@Override
@@ -128,22 +148,51 @@ public class TimelineActivity
 	public boolean onOptionsItemSelected(MenuItem item) {		
 		return _generalMenu.processSelection(item) ? true : super.onOptionsItemSelected(item);
 	}
+
+	
+	/**
+	 * Aux methods
+	 */
+	
+	public void refresh() {
+		Log.d(App.TAG, "TimelineActivity.refresh");
 		
+		if (!hasRequiredPreferences()) {
+			Log.d(App.TAG, "!!! DELETE THIS !!! TimelineActivity.refresh: Getting preferences");
+			return;
+		}
+
+		Log.d(App.TAG, "TimelineActivity.refresh: Calling TimelinePullService");
+		startService(_timelinePullServiceIntent);
+	}
+
+	private boolean hasRequiredPreferences() {
+		if (_app.prefs().hasRequired())
+			return true;
+	
+		Log.d(App.TAG, "Required preferences are missing");
+		Utils.showToast(_app.context(), getString(R.string.fillRequiredPreferences));
+		startActivity(new Intent(this, PrefsActivity.class));
+		return false;
+	}
+			
 	//new onTaskDone to work with TimelinePullService
-	public void onTaskDone() {
+	public void onTimelineRefreshed() {
 		Log.d(App.TAG, "TimelineActivity.onTaskDone");
 	
-		_c = _app.db().getAllStatus();
-		startManagingCursor(_c);
+		
+		/*_db = _app.db().openReadableDb(); 
+		Cursor c = _app.db().getAllStatus(_db);
+		startManagingCursor(c);
 		
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				R.layout.timeline_item, //layout
-				_c,
+				c,
 				new String[] {TimelineContract.AUTHOR_NAME, TimelineContract.TEXT, TimelineContract.CREATED_AT },
 				new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime });
 		
 		adapter.setViewBinder(this);
-		setListAdapter(adapter);
+		setListAdapter(adapter);*/
 		
 		//setListAdapter(new TimelineAdapter(_app, this, _c));
 		
@@ -165,55 +214,10 @@ public class TimelineActivity
 		setListAdapter(_app.statusAdapter);*/
 	}
 	
-	class StatusAdapter extends ArrayAdapter<Twitter.Status> implements OnClickListener {
-
-		int _position ;
-		
-		public StatusAdapter(Context context, int textViewResourceId, List<Twitter.Status> objects) {
-			super(context, textViewResourceId, objects);
-		}			
-			
-   		@Override
-   		public View getView(int position, View convertView, ViewGroup parent) {
-   			_position = position ;
-   			
-   			if (null == convertView) {
-   				LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-   				convertView = mInflater.inflate(R.layout.timeline_item, null);
-   			}	
-   			TextView tvUser = (TextView) convertView.findViewById(R.id.tl_item_textUser);
-   			tvUser.setText(getItem(position).getUser().toString());
-
-   			TextView tvTime = (TextView) convertView.findViewById(R.id.tl_item_textTime);
-   			Date itemDate = getItem(position).getCreatedAt();
-   			//tvTime.setText(dateToAge(itemDate));
-
-   			TextView tvMessage = (TextView) convertView.findViewById(R.id.tl_item_textMessage);
-   			
-   			String msg = getItem(position).getText();
-   			int previewChars = _app.prefs().previewChars(); 
-   			int length = (previewChars > msg.length()) ? msg.length() : previewChars;
-   			tvMessage.setText(msg.substring(0, length));
-   			convertView.setOnClickListener(this);
-   			return convertView;
-   		}
-   			
-
-		public void onClick(View v) {
-			Log.d(App.TAG, "TimelineActivity.onItemClick");
-			Intent intent = new Intent(v.getContext(), DetailActivity.class);
-			Status item = (Status) this.getItem(_position) ;
-			intent.putExtra("detailTextUser", item.getUser().toString());
-			intent.putExtra("detailTextMessage", item.getText());
-			intent.putExtra("detailTextTime", item.getCreatedAt().toGMTString());
-			intent.putExtra("detailTextId", "#"+String.valueOf(item.getId()));
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			
-			startActivity(intent);
-			
-		}   	
-	}
-
+	
+	/**
+	 * Interface implementations
+	 */
 	
 	public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 		// Skip if this value doesn't need special treatment
@@ -260,16 +264,20 @@ public class TimelineActivity
 	public void onPreferenceChanged(Preferences prefs, String key, boolean sessionInvalidated) {
 		Log.d(App.TAG, "TimelineActivity.onPreferenceChanged");
 		if (sessionInvalidated) {
-			_app.statusAdapter = null;
+			//_app.statusAdapter = null;
+			_app.timelineRetrieved = false;
 			return;
 		}
-		if (key.equals("maxPosts")) {
+		/*if (key.equals("maxPosts")) {
 			_app.twitter().setCount(prefs.maxPosts());
 			return;
-		}
+		}*/
 		
-		if (key.equals("previewChars"))
-			_app.statusAdapter.notifyDataSetChanged();
+		if (key.equals("previewChars")) {
+			SimpleCursorAdapter adapter = (SimpleCursorAdapter) getListAdapter();
+			adapter.notifyDataSetChanged();
+			//_app.statusAdapter.notifyDataSetChanged();
+		}
 	}
 	
 }

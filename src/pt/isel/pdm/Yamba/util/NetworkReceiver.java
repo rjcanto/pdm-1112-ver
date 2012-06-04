@@ -1,5 +1,7 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.util;
 
+import pt.isel.pdm.Yamba.App;
+import pt.isel.pdm.Yamba.services.StatusUploadService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

@@ -1,6 +1,11 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.services;
 
 import java.util.List;
+
+import pt.isel.pdm.Yamba.App;
+import pt.isel.pdm.Yamba.R;
+import pt.isel.pdm.Yamba.R.string;
+import pt.isel.pdm.Yamba.util.Utils;
 
 import winterwell.jtwitter.Twitter.Status;
 import android.app.IntentService;

@@ -1,4 +1,4 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.util;
 
 import android.content.Context;
 import android.widget.Toast;
