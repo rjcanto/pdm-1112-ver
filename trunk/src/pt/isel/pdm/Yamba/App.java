@@ -77,7 +77,7 @@ public class App extends Application implements OnPreferenceChangeListener {
 //			_timelineResult.add(0, status);
 //			statusAdapter.notifyDataSetChanged();
 //		}
-		if (statusAct != null)
+		//if (statusAct != null)
 			statusAct.onStatusSent(status);
 	}
 	

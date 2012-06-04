@@ -58,6 +58,7 @@ public class StatusUploadService extends IntentService {
 						_app.onServiceNewStatusSent(null);
 					}
 				};
+				_hMainThread.post(run);
 			}
 		}		
 	}

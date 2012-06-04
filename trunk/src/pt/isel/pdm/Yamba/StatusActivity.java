@@ -53,8 +53,6 @@ public class StatusActivity extends Activity
 		super.onDestroy();
 	}
 
-
-
 	@Override
 	protected void onResume() {
 		Log.d(App.TAG, "StatusActivity.onResume");
@@ -120,13 +118,13 @@ public class StatusActivity extends Activity
 
 	public void onStatusSent(Status status) {
 		Log.d(App.TAG, "StatusActivity.onStatusSent");
-		if (status != null) {
+		//if (status != null) {
 			// Reset text and available chars
 			_text.setText("");
 			_availChars.setText(String.valueOf(_app.prefs().maxChars()));
 			//_app.statusAdapter.add(status);
 			
-		}
+		//}
 		enableSubmit();
 	}
 	
