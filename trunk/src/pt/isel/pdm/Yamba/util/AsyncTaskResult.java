@@ -1,4 +1,4 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.util;
 
 public interface AsyncTaskResult<T> {
 	public Throwable error();

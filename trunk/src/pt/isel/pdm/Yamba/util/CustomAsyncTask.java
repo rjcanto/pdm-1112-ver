@@ -1,5 +1,6 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.util;
 
+import pt.isel.pdm.Yamba.App;
 import android.os.AsyncTask;
 import android.util.Log;
 

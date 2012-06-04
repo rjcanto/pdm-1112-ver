@@ -1,6 +1,10 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.activity;
 
 import java.util.Date;
+
+import pt.isel.pdm.Yamba.R;
+import pt.isel.pdm.Yamba.R.id;
+import pt.isel.pdm.Yamba.R.layout;
 
 import android.app.Activity;
 import android.os.Bundle;

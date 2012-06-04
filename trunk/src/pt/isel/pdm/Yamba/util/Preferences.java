@@ -1,7 +1,9 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.util;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import pt.isel.pdm.Yamba.App;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,11 +11,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-interface OnPreferenceChangeListener {
-	public void onPreferenceChanged(Preferences sp,	String key, boolean sessionInvalidated);
-}
-
-final class Preferences implements OnSharedPreferenceChangeListener {
+public final class Preferences implements OnSharedPreferenceChangeListener {
 	
 	private static final int MAX_CHARS = 140;
 	private static final int MAX_POSTS = 10;

@@ -2,7 +2,13 @@ package pt.isel.pdm.Yamba;
 
 import java.util.List;
 
+import pt.isel.pdm.Yamba.activity.StatusActivity;
+import pt.isel.pdm.Yamba.activity.TimelineActivity;
 import pt.isel.pdm.Yamba.database.PdmDb;
+import pt.isel.pdm.Yamba.services.TimelinePullService;
+import pt.isel.pdm.Yamba.util.OnPreferenceChangeListener;
+import pt.isel.pdm.Yamba.util.Preferences;
+import pt.isel.pdm.Yamba.util.Utils;
 
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.Status;
@@ -26,14 +32,14 @@ public class App extends Application implements OnPreferenceChangeListener {
 	/**
 	 * Shared state
 	 */
-	public TimelineActivity.StatusAdapter statusAdapter;
+	//public TimelineActivity.StatusAdapter statusAdapter;
 	public ProgressDialog progressDialog;
 	public List<Twitter.Status> _timelineResult;
-	public TimelineActivity _timelineAct ;
+	public TimelineActivity timelineAct ;
 	public StatusActivity statusAct;
 	public boolean sendingStatus;
+	public boolean timelineRetrieved;
 	public boolean isPendingStatus;
-	
 	
 	@Override
 	public void onCreate() {
@@ -63,12 +69,18 @@ public class App extends Application implements OnPreferenceChangeListener {
 		
 		if (key.equals(!_prefs.autoRefresh())) {
 			stopService(new Intent(this, TimelinePullService.class));
+			return;
+		}
+		
+		if (key.equals("maxPosts") && _twitter != null) {
+			_twitter.setCount(_prefs.maxPosts());
+			return;
 		}
 	}
 	
 	public void onServiceNewTimelineResult() {
-		if(_timelineAct != null)
-			_timelineAct.onTaskDone();
+		if(timelineAct != null)
+			timelineAct.onTimelineRefreshed();
 	}
 	
 	public void onServiceNewStatusSent(Status status) {

@@ -1,6 +1,11 @@
-package pt.isel.pdm.Yamba;
+package pt.isel.pdm.Yamba.services;
 
 import java.util.List;
+
+import pt.isel.pdm.Yamba.App;
+import pt.isel.pdm.Yamba.R;
+import pt.isel.pdm.Yamba.R.string;
+import pt.isel.pdm.Yamba.util.Utils;
 
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
@@ -30,7 +35,7 @@ public class TimelinePullService extends Service {
 
 		@Override
 		public void handleMessage(Message msg) {
-			onRefresh();
+			retrieveTimeline();
 		}
 	}
 
@@ -66,8 +71,8 @@ public class TimelinePullService extends Service {
 		return START_STICKY;
 	}
 	
-	private void onRefresh() {
-		Log.d(App.TAG, "TimelinePullService.onRefresh");
+	private void retrieveTimeline() {
+		Log.d(App.TAG, "TimelinePullService.retrieveTimeline");
 		try {
 			
 			List<Twitter.Status> timeline = _app.twitter().getUserTimeline();
@@ -88,7 +93,7 @@ public class TimelinePullService extends Service {
 				}
 			});
 			Log.d(App.TAG,
-					"TimelinePullService.onHandleIntent: Exception "
+					"TimelinePullService.retrieveTimeline: Exception "
 							+ e.getMessage());
 			
 			stopSelf();
