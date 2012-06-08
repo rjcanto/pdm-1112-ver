@@ -179,7 +179,8 @@ public class TimelineActivity
 	//new onTaskDone to work with TimelinePullService
 	public void onTimelineRefreshed() {
 		Log.d(App.TAG, "TimelineActivity.onTaskDone");
-	
+		Cursor c = _app.db().getAllStatus();
+		c.close();
 		
 		/*_db = _app.db().openReadableDb(); 
 		Cursor c = _app.db().getAllStatus(_db);

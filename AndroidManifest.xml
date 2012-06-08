@@ -9,17 +9,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" 
         android:name="App">
-        <!-- 
-        <activity
-            android:name=".TimelineActivity"
-            android:label="@string/app_name" >
-            
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-         -->
+
+        <provider android:name=".TimelineProvider" android:authorities="pt.isel.pdm.Yamba.providers">
+
         <activity
             android:name=".activity.TimelineActivity"
             android:label="@string/app_name" >

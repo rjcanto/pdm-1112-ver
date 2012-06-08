@@ -3,7 +3,7 @@ package pt.isel.pdm.Yamba.database;
 import android.provider.BaseColumns;
 
 public class TimelineContract {
-	public static final String TABLE 	= "Timeline";
+	public static final String TABLE 	= "timeline";
 	//public static final Uri CONTENT_URI = Uri.withAppendedPath(LeicProvider.CONTENT_URI, TABLE);
 	
 	public static final String 

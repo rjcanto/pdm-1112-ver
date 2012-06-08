@@ -8,11 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteQuery;
 
-public final class SmartCursorFactory implements CursorFactory {
+final class SmartCursorFactory implements CursorFactory {
     
 	private SmartDbHelper _smartDbHelper;
 	
     public Cursor newCursor(SQLiteDatabase db, SQLiteCursorDriver driver, String table, SQLiteQuery query) {
+    	Utils.Log("SmartCursorFactory: new cursor " + toString());
     	if (_smartDbHelper == null)
     		throw new IllegalAccessError("SmartDbHelper not set");
     	
