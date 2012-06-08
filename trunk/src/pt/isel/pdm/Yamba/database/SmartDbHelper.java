@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * An SQLiteOpenHelper that knows how to close the database when all connections are closed.
  */
-public abstract class SmartDbHelper extends SQLiteOpenHelper {
+abstract class SmartDbHelper extends SQLiteOpenHelper {
 	private int _openConnections;
 
 	public SmartDbHelper(Context context, String name, CursorFactory factory, int version) {

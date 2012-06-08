@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.isel.pdm.Yamba.util.Utils;
-
 import winterwell.jtwitter.Twitter.Status;
 import android.content.ContentValues;
 import android.content.Context;
@@ -16,19 +15,18 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class PdmDb {
 	
-	private static final String DB_NAME = "pdm.db";
-	private static final int DB_VERSION = 1;
-	private DbHelper _dbHelper;
-
-	private static final class DbHelper extends SmartDbHelper {
+	private final static class DbHelper extends SmartDbHelper {
+		private static final String DB_NAME = "pdm.db";
+		private static final int DB_VERSION = 1;
 		
 		public static DbHelper createDbHelper(Context context) {
+			Utils.Log("DbHelper.createDbHelper");
 			SmartCursorFactory scf = new SmartCursorFactory();
 			DbHelper dbHelper = new DbHelper(context, scf);
 			scf.setSmartDbHelper(dbHelper);
 			return dbHelper;
 		}
-		
+
 		private DbHelper(Context ctx, SmartCursorFactory smartCursorFactory) {
 			super(ctx, DB_NAME, smartCursorFactory, DB_VERSION);
 		}
@@ -36,11 +34,11 @@ public class PdmDb {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			String columns = TimelineContract._ID + " bigint primary key, "
-					       + TimelineContract.AUTHOR_ID + " bigint not null, " // foreign key?
-					       + TimelineContract.AUTHOR_NAME + " text not null, "
-					       + TimelineContract.CREATED_AT + " datetime not null, "
-					       + TimelineContract.TEXT + " text not null, "
-					       + TimelineContract.IS_READ + " boolean not null";
+					+ TimelineContract.AUTHOR_ID + " bigint not null, " // foreign key?
+					+ TimelineContract.AUTHOR_NAME + " text not null, "
+					+ TimelineContract.CREATED_AT + " datetime not null, "
+					+ TimelineContract.TEXT + " text not null, "
+					+ TimelineContract.IS_READ + " boolean not null";
 			String sql = "CREATE TABLE "+ TimelineContract.TABLE + "( "+ columns + " )";			
 			Utils.Log("DbHelper.onCreate: sql = " + sql);
 			db.execSQL(sql);
@@ -54,21 +52,20 @@ public class PdmDb {
 		}
 	}
 	
+	private final DbHelper _dbHelper;
+
+	
+	
 	
 	public PdmDb(Context ctx) {
 		_dbHelper = DbHelper.createDbHelper(ctx);
 		Utils.Log("PdmDb: ready");
 	}
 	
-	
-	/** Open a connection to the database */
-	public SQLiteDatabase openReadableDb() {
-		return _dbHelper.getWritableDatabase();
-	}
-	
 	/** Gets a cursor to access all of the Status in the database. */
-	public Cursor getAllStatus(SQLiteDatabase db) {
+	public Cursor getAllStatus() {
 		Utils.Log("PdmDb.getAllStatus");
+		SQLiteDatabase db = _dbHelper.getReadableDatabase();
 		return db.query(
 				TimelineContract.TABLE,
 				null, null, null, null, null,
@@ -126,15 +123,15 @@ public class PdmDb {
         	result.add(statusCursor.getString(0));
        	    statusCursor.moveToNext();
         }
-		db.delete(StatusOfflineContract.TABLE, null, null) ;
+		db.delete(PendingContract.TABLE, null, null) ;
 		statusCursor.close() ;
 		return result;
 	}
 	
 	public void insertOfflineStatus(String msg) {
 		ContentValues values = new ContentValues();
-		values.put(StatusOfflineContract.TEXT, msg);
-		_dbHelper.getReadableDatabase().insert(StatusOfflineContract.TABLE, null, values);
+		values.put(PendingContract.TEXT, msg);
+		_dbHelper.getReadableDatabase().insert(PendingContract.TABLE, null, values);
 		_dbHelper.close();
 	}
 }
