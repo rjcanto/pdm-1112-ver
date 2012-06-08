@@ -2,9 +2,6 @@ package pt.isel.pdm.Yamba.activity;
 
 import pt.isel.pdm.Yamba.App;
 import pt.isel.pdm.Yamba.R;
-import pt.isel.pdm.Yamba.R.id;
-import pt.isel.pdm.Yamba.R.layout;
-import pt.isel.pdm.Yamba.R.string;
 import pt.isel.pdm.Yamba.services.StatusUploadService;
 import pt.isel.pdm.Yamba.util.GeneralMenu;
 import pt.isel.pdm.Yamba.util.OnPreferenceChangeListener;

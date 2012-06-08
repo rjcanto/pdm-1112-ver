@@ -50,7 +50,7 @@ public class TimelineProvider extends ContentProvider {
 		}
 	}
 	
-	public static final String AUTHORITY = "pt.isel.pdm.providers";
+	public static final String AUTHORITY = "pt.isel.pdm.Yamba.providers";
 	public static final Uri TIMELINE_URI =
 			Uri.parse(ContentResolver.SCHEME_CONTENT+"://" + AUTHORITY + TimelineContract.TABLE);
 	public static final Uri PENDING_URI =

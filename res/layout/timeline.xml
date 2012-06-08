@@ -7,7 +7,7 @@
         android:layout_width="fill_parent"  android:layout_height="wrap_content"
         android:layout_margin="10dp" android:gravity="center"
         android:text="@string/tl_title" android:textSize="32sp"
-        android:textColor="#AA0"/>
+        android:textColor="#d6d6d6"/>
 
    <ListView
        android:id="@android:id/list"

@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tl_item_textuser"
             android:layout_weight="1"
-            android:textColor="#AA0"
+            android:textColor="#d6d6d6"
             android:textSize="20sp" />
 
         <TextView

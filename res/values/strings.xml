@@ -74,13 +74,16 @@
     <string name="detail_time">Created At</string>
     <string name="detail_id">Message Id</string>
     <string name="detail_title">Detail</string>
+    <string name="detail_imgdesc">Share this message</string>
+    <string name="detail_share_subject">Yamba message shared by </string>
     
     <!-- UserInfo -->
     <string name="userInfo_title">Profile</string>
     <string name="userInfo_name">Name:</string>
     <string name="userInfo_statusCount">Total posts:</string>
-    <string name="userInfo_nSubscribers">Subsribers:</string>
+    <string name="userInfo_nSubscribers">Subscribers:</string>
     <string name="userInfo_nSubscriptions">Subscriptions:</string>
     <string name="userInfo_image">Avatar:</string>
+    
     
 </resources>
