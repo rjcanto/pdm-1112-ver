@@ -123,7 +123,7 @@ public class PdmDb {
 		
 		statusCursor.moveToFirst();
         while (statusCursor.isAfterLast() == false) {
-        	result.add(statusCursor.getString(1));
+        	result.add(statusCursor.getString(0));
        	    statusCursor.moveToNext();
         }
 		db.delete(StatusOfflineContract.TABLE, null, null) ;
