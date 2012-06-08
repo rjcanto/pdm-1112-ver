@@ -9,13 +9,13 @@
         android:layout_width="fill_parent"  android:layout_height="wrap_content"
         android:layout_margin="10dp" android:gravity="center"
         android:text="@string/detail_title" android:textSize="32sp"
-        android:textColor="#AA0"/>
+        android:textColor="#d6d6d6"/>
         <TextView
         android:id="@+id/detail_textUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/detail_user"
-        android:textColor="#AA0"
+        android:textColor="#d6d6d6"
         android:textSize="20sp" />
     
     <TextView
@@ -50,9 +50,11 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/imgShare"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/share_inverted" />
+        android:src="@drawable/share_inverted"
+        android:onClick="onClickShare"
+        android:contentDescription="@string/detail_imgdesc" />
 
 </LinearLayout>
