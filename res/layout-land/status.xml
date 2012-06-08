@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/titleStatus"
-        android:textColor="#AA0" android:textSize="22sp"/>
+        android:textColor="#d6d6d6" android:textSize="22sp"/>
 
  	<LinearLayout
         android:id="@+id/linearLayout1"
