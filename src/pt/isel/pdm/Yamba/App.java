@@ -4,12 +4,11 @@ import java.util.List;
 
 import pt.isel.pdm.Yamba.activity.StatusActivity;
 import pt.isel.pdm.Yamba.activity.TimelineActivity;
-import pt.isel.pdm.Yamba.database.PdmDb;
+import pt.isel.pdm.Yamba.providers.Timeline;
 import pt.isel.pdm.Yamba.services.TimelinePullService;
 import pt.isel.pdm.Yamba.util.OnPreferenceChangeListener;
 import pt.isel.pdm.Yamba.util.Preferences;
 import pt.isel.pdm.Yamba.util.Utils;
-
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.Status;
 import winterwell.jtwitter.TwitterException;
@@ -25,7 +24,8 @@ public class App extends Application implements OnPreferenceChangeListener {
 	public static final String TAG = "PDM";
 	private Preferences _prefs;
 	private Twitter _twitter;
-	private PdmDb _pdmDb;
+	//private PdmDb _pdmDb;
+	private Timeline _timeline;
 	private ConnectivityManager _connMan = null;
 	private NetworkInfo _netInfo = null;
 
@@ -48,13 +48,17 @@ public class App extends Application implements OnPreferenceChangeListener {
 		isPendingStatus = false ;
 		_prefs = new Preferences(getApplicationContext());
 		_prefs.registerOnPreferenceChangeListener(this);
-		_pdmDb = new PdmDb(this);
+		//_pdmDb = new PdmDb(this);
+		_timeline = new Timeline(this);
 	}
 	
-	/** Returns the DAL object */	
-	public PdmDb db() {
-		return _pdmDb;
+	/** Returns the content provider adapter */
+	public Timeline timeline() {
+		return _timeline;
 	}
+	/*public PdmDb db() {
+		return _pdmDb;
+	}*/
 	
 	/** Returns the Preferences object */
 	public Preferences prefs() {

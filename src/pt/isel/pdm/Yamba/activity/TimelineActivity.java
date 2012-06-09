@@ -3,7 +3,7 @@ package pt.isel.pdm.Yamba.activity;
 
 import pt.isel.pdm.Yamba.App;
 import pt.isel.pdm.Yamba.R;
-import pt.isel.pdm.Yamba.database.TimelineContract;
+import pt.isel.pdm.Yamba.providers.TimelineContract;
 import pt.isel.pdm.Yamba.services.TimelinePullService;
 import pt.isel.pdm.Yamba.util.GeneralMenu;
 import pt.isel.pdm.Yamba.util.OnPreferenceChangeListener;
@@ -145,7 +145,7 @@ public class TimelineActivity
 		Log.d(App.TAG, "TimelineActivity.refresh");
 		
 		if (!hasRequiredPreferences()) {
-			Log.d(App.TAG, "!!! DELETE THIS !!! TimelineActivity.refresh: Getting preferences");
+			Log.d(App.TAG, "TimelineActivity.refresh: Getting preferences");
 			return;
 		}
 
@@ -165,12 +165,8 @@ public class TimelineActivity
 			
 	//new onTaskDone to work with TimelinePullService
 	public void onTimelineRefreshed() {
-		Log.d(App.TAG, "TimelineActivity.onTaskDone");
-		Cursor c = _app.db().getAllStatus();
-		c.close();
-		
-		/*_db = _app.db().openReadableDb(); 
-		Cursor c = _app.db().getAllStatus(_db);
+		Cursor c = _app.timeline().getAllStatus();
+		Utils.Log(String.format("TimelineActivity.onTimelineRefreshed. Rows: %d", c.getCount()));
 		startManagingCursor(c);
 		
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
@@ -180,7 +176,7 @@ public class TimelineActivity
 				new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime });
 		
 		adapter.setViewBinder(this);
-		setListAdapter(adapter);*/
+		setListAdapter(adapter);
 		
 		//setListAdapter(new TimelineAdapter(_app, this, _c));
 		
