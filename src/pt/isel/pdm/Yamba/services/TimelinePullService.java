@@ -5,11 +5,16 @@ import java.util.List;
 import pt.isel.pdm.Yamba.App;
 import pt.isel.pdm.Yamba.R;
 import pt.isel.pdm.Yamba.R.string;
+import pt.isel.pdm.Yamba.activity.TimelineActivity;
 import pt.isel.pdm.Yamba.util.Utils;
 
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -24,6 +29,8 @@ public class TimelinePullService extends Service {
 	private Handler _hMainThread;
 	private Looper _serviceLooper;
 	private ServiceHandler _serviceHandler;
+	private NotificationManager _notificationManager;
+	private Notification _notification ;
 	
 	private final static int CODE_AUTO_UPDATE = 0;	
 
@@ -54,6 +61,15 @@ public class TimelinePullService extends Service {
 		// Get the HandlerThread's Looper and use it for our Handler
 		_serviceLooper = thread.getLooper();
 		_serviceHandler = new ServiceHandler(_serviceLooper);
+		
+		_app.getApplicationContext();
+		_notificationManager = (NotificationManager) getSystemService(
+				Context.NOTIFICATION_SERVICE);
+		
+		_notification = new Notification(
+				android.R.drawable.stat_notify_chat, 
+				getString(R.string.tl_notification_text), 
+				System.currentTimeMillis());
 	}
 
 	@Override
@@ -77,6 +93,8 @@ public class TimelinePullService extends Service {
 			
 			List<Twitter.Status> timeline = _app.twitter().getUserTimeline();
 			_app.db().insertStatus(timeline);
+			
+			sendNotification(timeline.size(), timeline.get(0).text) ;
 			
 			_hMainThread.post(new Runnable() {
 				public void run() {
@@ -110,6 +128,24 @@ public class TimelinePullService extends Service {
 	}
 
 	
+	/**
+	 * Sends a notification to the notificationManager announcing that are new
+	 * messages available in the timeline.
+	 * 
+	 * @param nStatusRetrieved	Number of messages retrieved, so it can be displayed in the notification
+	 * @param lastStatus	The text from the last status, so it can be displayed in the notification
+	 */
+	private void sendNotification(int nStatusRetrieved, String lastStatusText) {
+		Context context = getApplicationContext();
+		CharSequence contentTitle = "My notification";
+		CharSequence contentText = "Hello World!"; //TODO replace by lastStatusText?
+		Intent notificationIntent = new Intent(this, TimelineActivity.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+		_notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+		final int HELLO_ID = 1;
+		_notificationManager.notify(HELLO_ID, _notification);
+	}
 
 	@Override
 	public IBinder onBind(Intent intent) {

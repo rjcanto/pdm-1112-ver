@@ -53,6 +53,7 @@
     <!-- Timeline -->
     <string name="tl_dialog_message">Loading Timeline</string>
     <string name="tl_title">Timeline</string>
+    <string name="tl_notification_text">New message!</string>
     
     <!-- Timeline Items -->
     <string name="tl_item_textmessage">Message</string>
