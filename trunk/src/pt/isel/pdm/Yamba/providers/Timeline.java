@@ -8,7 +8,6 @@ import winterwell.jtwitter.Twitter.Status;
 import android.app.Application;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.RemoteException;
@@ -17,6 +16,7 @@ public class Timeline {
 
 	//private final Application _app;
 	private final ContentResolver _resolver;
+	Cursor timelineCursor;
 	
 	public Timeline(Application app) {
 		//_app = app;
@@ -24,18 +24,28 @@ public class Timeline {
 		
 	}
 	
-	/** Gets a cursor to access all of the Status in the database. */
-	public Cursor getAllStatus() {
+	/** Gets the latest retrieved timeline, if any. Safe to call on UI thread */
+	public synchronized Cursor getCachedTimeline() {
+		if (timelineCursor != null && timelineCursor.isClosed())
+			timelineCursor = null;
+		return timelineCursor;
+	}
+	
+	/** 
+	 * Creates a cursor to access all of the Status in the database. 
+	 * Don't call on UI thread 
+	 **/
+	public synchronized Cursor getTimeline() {
 		Utils.Log("Timeline.getAllStatus");
 		
-		return _resolver.query(
+		return timelineCursor = _resolver.query(
 				TimelineProvider.TIMELINE_URI,				
 				null, null, null,
 				TimelineContract.CREATED_AT + " DESC");
 	}
 	
-	/** Inserts a collection of Status into the database. */
-	public void insertStatus(List<Status> timeline) {
+	/** Inserts a collection of Status into the database. Don't call on UI thread */
+	public synchronized void insertStatus(List<Status> timeline) {
 		Utils.Log(String.format("Timeline.insertStatus (%d)", timeline.size()));
 		
 		ContentProviderClient client = _resolver.acquireContentProviderClient(TimelineProvider.AUTHORITY);
@@ -59,9 +69,11 @@ public class Timeline {
 		finally {
 			client.release();
 		}
+		
+		
 	}
 	
-	public List<String> getPendingStatus() {
+	public synchronized List<String> getPendingStatus() {
 		List<String> result = new ArrayList<String>();
 		
 		Cursor statusCursor = _resolver.query(TimelineProvider.PENDING_URI,
@@ -77,7 +89,7 @@ public class Timeline {
 		return result;
 	}
 	
-	public void insertPendingStatus(String msg) {
+	public synchronized void insertPendingStatus(String msg) {
 		ContentValues values = new ContentValues();
 		values.put(PendingContract.TEXT, msg);
 		_resolver.insert(TimelineProvider.PENDING_URI, values);		
