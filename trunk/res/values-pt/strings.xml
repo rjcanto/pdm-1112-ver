@@ -53,6 +53,7 @@
     <!-- Timeline -->
     <string name="titleTimeline">Timeline</string>    
     <string name="tl_dialog_message">Actualizando Timeline</string>
+    <string name="tl_notification_text">Nova mensagem!</string>
     
     <!-- Timeline Items -->
     <string name="tl_item_textmessage">Mensagem</string>
