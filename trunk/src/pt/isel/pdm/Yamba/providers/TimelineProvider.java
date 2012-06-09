@@ -143,7 +143,7 @@ public class TimelineProvider extends ContentProvider {
 		switch (uriMatcher.match(uri)) {
 		
 		case TIMELINE_ALL:
-			id = db.insertWithOnConflict(TimelineContract.TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+			id = db.insertWithOnConflict(TimelineContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 			_dbHelper.close();
 			break;
 			
