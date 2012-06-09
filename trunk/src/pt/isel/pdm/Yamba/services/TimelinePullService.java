@@ -138,7 +138,7 @@ public class TimelinePullService extends Service {
 	private void sendNotification(int nStatusRetrieved, String lastStatusText) {
 		Context context = getApplicationContext();
 		Intent notificationIntent = new Intent(this, TimelineActivity.class);
-		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) ;
+		//notificationIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) ;
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
 		_notification.setLatestEventInfo(
