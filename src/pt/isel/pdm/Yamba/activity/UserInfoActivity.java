@@ -2,8 +2,6 @@ package pt.isel.pdm.Yamba.activity;
 
 import pt.isel.pdm.Yamba.App;
 import pt.isel.pdm.Yamba.R;
-import pt.isel.pdm.Yamba.R.id;
-import pt.isel.pdm.Yamba.R.layout;
 import pt.isel.pdm.Yamba.services.UserInfoPullService;
 import pt.isel.pdm.Yamba.util.GeneralMenu;
 import pt.isel.pdm.Yamba.util.OnPreferenceChangeListener;
@@ -34,7 +32,7 @@ public class UserInfoActivity extends Activity
 	private TextView _tvName, _tvStatusCount, _tvNSubscriptions, _tvNSubscribers;
 	private ImageView _ivProfile;
 	private GeneralMenu _generalMenu;
-	private Intent _serviceIntent;
+	//private Intent _serviceIntent;
 	private boolean _bound;
 
 	/** Called when the activity is first created. */

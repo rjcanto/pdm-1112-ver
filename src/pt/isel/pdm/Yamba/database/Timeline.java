@@ -15,11 +15,11 @@ import android.os.RemoteException;
 
 public class Timeline {
 
-	private final Application _app;
+	//private final Application _app;
 	private final ContentResolver _resolver;
 	
 	public Timeline(Application app) {
-		_app = app;
+		//_app = app;
 		_resolver = app.getContentResolver();
 		
 	}
