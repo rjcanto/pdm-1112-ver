@@ -50,6 +50,20 @@
 			<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 			</intent-filter>
 		</receiver>
+<!-- 		
+		<receiver android:name=".providers.WidgetProvider" >
+		    <intent-filter>
+		        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+		        <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+		        <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+		        <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+		    </intent-filter>
+
+		    <meta-data
+		        android:name="android.appwidget.provider"
+		        android:resource="@xml/widget_info" />
+		</receiver>
+ -->
 	</application>
         
 </manifest>
