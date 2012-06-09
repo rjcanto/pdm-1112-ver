@@ -92,9 +92,12 @@ public class TimelinePullService extends Service {
 		try {
 			
 			List<Twitter.Status> timeline = _app.twitter().getUserTimeline();
-			_app.timeline().insertStatus(timeline);
 			
-			sendNotification(timeline.size(), timeline.get(timeline.size()-1).text) ;
+			if (timeline.size() > 0) {
+				_app.timeline().insertStatus(timeline);
+				_app.timeline().getTimeline(); // Refresh cache
+				sendNotification(timeline.size(), timeline.get(timeline.size()-1).text) ;
+			}
 			
 			_hMainThread.post(new Runnable() {
 				public void run() {

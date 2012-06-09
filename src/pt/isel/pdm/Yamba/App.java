@@ -1,7 +1,5 @@
 package pt.isel.pdm.Yamba;
 
-import java.util.List;
-
 import pt.isel.pdm.Yamba.activity.StatusActivity;
 import pt.isel.pdm.Yamba.activity.TimelineActivity;
 import pt.isel.pdm.Yamba.providers.Timeline;
@@ -19,6 +17,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.SimpleCursorAdapter;
 
 public class App extends Application implements OnPreferenceChangeListener {
 	public static final String TAG = "PDM";
@@ -32,9 +31,8 @@ public class App extends Application implements OnPreferenceChangeListener {
 	/**
 	 * Shared state
 	 */
-	//public TimelineActivity.StatusAdapter statusAdapter;
+	public SimpleCursorAdapter timelineAdapter;
 	public ProgressDialog progressDialog;
-	public List<Twitter.Status> _timelineResult;
 	public TimelineActivity timelineAct ;
 	public StatusActivity statusAct;
 	public boolean sendingStatus;
@@ -83,6 +81,7 @@ public class App extends Application implements OnPreferenceChangeListener {
 	}
 	
 	public void onServiceNewTimelineResult() {
+		timelineRetrieved = true;
 		if(timelineAct != null)
 			timelineAct.onTimelineRefreshed();
 	}

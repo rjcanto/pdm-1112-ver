@@ -3,15 +3,9 @@ package pt.isel.pdm.Yamba.activity;
 
 import pt.isel.pdm.Yamba.App;
 import pt.isel.pdm.Yamba.R;
-import pt.isel.pdm.Yamba.providers.PendingContract;
 import pt.isel.pdm.Yamba.providers.TimelineContract;
 import pt.isel.pdm.Yamba.services.TimelinePullService;
-import pt.isel.pdm.Yamba.util.GeneralMenu;
-import pt.isel.pdm.Yamba.util.OnPreferenceChangeListener;
-import pt.isel.pdm.Yamba.util.Preferences;
-import pt.isel.pdm.Yamba.util.Utils;
-
-
+import pt.isel.pdm.Yamba.util.*;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,8 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.SimpleCursorAdapter;
+import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 
 public class TimelineActivity 
@@ -35,7 +29,7 @@ public class TimelineActivity
 	private App _app;
 	private GeneralMenu _generalMenu;
 	private SQLiteDatabase _db;
-	//private Cursor _cursor;
+	private Cursor _cursor;
 	private Intent _timelinePullServiceIntent;
 	
 	/**
@@ -65,6 +59,9 @@ public class TimelineActivity
 		
 		if (isFinishing()) {
 			Log.d(App.TAG, "TimelineActivity is finishing");
+			if (_cursor != null)
+				_cursor.close();
+			_app.timelineRetrieved = false;
 			stopService(new Intent(this, TimelinePullService.class));
 		}		
 		
@@ -85,23 +82,8 @@ public class TimelineActivity
 		
 		if (!_app.timelineRetrieved)
 			refresh();
-		
-		/*if (_db == null) {
-			_db = _app.db().openReadableDb(); 
-			_cursor = _app.db().getAllStatus(_db);
-			startManagingCursor(_cursor);
-			
-			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-					R.layout.timeline_item, //layout
-					_cursor,
-					new String[] {TimelineContract.AUTHOR_NAME, TimelineContract.TEXT, TimelineContract.CREATED_AT },
-					new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime });
-			
-			adapter.setViewBinder(this);
-			setListAdapter(adapter);
-		}*/
-		//if (_app.statusAdapter == null)
-		//	refresh();
+		else
+			onTimelineRefreshed();
 	}
 	
 	@Override
@@ -166,37 +148,34 @@ public class TimelineActivity
 			
 	//new onTaskDone to work with TimelinePullService
 	public void onTimelineRefreshed() {
-		Cursor c = _app.timeline().getAllStatus();
-		Utils.Log(String.format("TimelineActivity.onTimelineRefreshed. Rows: %d", c.getCount()));
-		startManagingCursor(c);
+		
+		_cursor = _app.timeline().getCachedTimeline();
+		if (_cursor == null) {
+			Utils.Log("TimelineActivity.onTimelineRefreshed. Cache miss!");
+			return;
+		}
+		
+		Utils.Log(String.format("TimelineActivity.onTimelineRefreshed. Rows: %d", _cursor.getCount()));
 
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+		if (_app.timelineAdapter == null) {
+			_app.timelineAdapter = new SimpleCursorAdapter(this,
 				R.layout.timeline_item, //layout
-				c,
+				_cursor,
 				new String[] {TimelineContract.AUTHOR_NAME, TimelineContract.TEXT, TimelineContract.CREATED_AT },
 				new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime });
+			_app.timelineAdapter.setViewBinder(this);
+		}
+		else
+			_app.timelineAdapter.changeCursor(_cursor); // Closes previous cursor
 
-		adapter.setViewBinder(this);
-		setListAdapter(adapter);
-
-		//setListAdapter(new TimelineAdapter(_app, this, _c));
+		setListAdapter(_app.timelineAdapter);
 		
 		/*
-		if (_app.statusAdapter == null) {
-			Log.d(App.TAG, "TimelineActivity.onTaskDone: First time");
-			_app.statusAdapter = new StatusAdapter(this, R.layout.timeline_item, timeline);
-		}
-		else {
-			Log.d(App.TAG, "TimelineActivity.onTaskDone: Refresh statusAdapter");
-			_app.statusAdapter.notifyDataSetChanged();
-		}
-		
 		if (_app.progressDialog != null &&_app.progressDialog.isShowing()) {
 			_app.progressDialog.dismiss();
 			_app.progressDialog = null;
         }
-		
-		setListAdapter(_app.statusAdapter);*/
+		*/
 	}
 	
 	
