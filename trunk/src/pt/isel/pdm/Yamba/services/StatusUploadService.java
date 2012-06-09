@@ -44,9 +44,9 @@ public class StatusUploadService extends IntentService {
 		Runnable run;
 
 		if (statusText == null) {
-			List<String> offlineStatusList = _app.db().getOfflineStatus() ;
+			List<String> pendingStatusList = _app.timeline().getPendingStatus();
 			
-			for (String str:offlineStatusList) {
+			for (String str:pendingStatusList) {
 				sendStatus(str) ;
 			}
 			
@@ -55,7 +55,7 @@ public class StatusUploadService extends IntentService {
 				sendStatus(statusText) ;
 			else {
 				Log.d(App.TAG, "StatusUpload.onHandleIntent - Storing Status in DB");
-				_app.db().insertOfflineStatus(statusText) ;
+				_app.timeline().insertPendingStatus(statusText) ;
 				run = new Runnable() {
 					public void run() {
 						Utils.showToast(_app.context(), getString(R.string.statusOfflineMessage));

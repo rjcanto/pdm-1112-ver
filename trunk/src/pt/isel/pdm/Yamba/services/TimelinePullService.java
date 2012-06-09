@@ -91,7 +91,7 @@ public class TimelinePullService extends Service {
 		try {
 			
 			List<Twitter.Status> timeline = _app.twitter().getUserTimeline();
-			_app.db().insertStatus(timeline);
+			_app.timeline().insertStatus(timeline);
 			
 			sendNotification(timeline.size(), timeline.get(0).text) ;
 			
