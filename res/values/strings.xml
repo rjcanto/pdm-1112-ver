@@ -54,6 +54,8 @@
     <string name="tl_dialog_message">Loading Timeline</string>
     <string name="tl_title">Timeline</string>
     <string name="tl_notification_text">New message!</string>
+    <string name="tl_notification_title_one">\u0020new message</string>
+    <string name="tl_notification_title_several">\u0020new messages</string>
     
     <!-- Timeline Items -->
     <string name="tl_item_textmessage">Message</string>
@@ -76,7 +78,8 @@
     <string name="detail_id">Message Id</string>
     <string name="detail_title">Detail</string>
     <string name="detail_imgdesc">Share this message</string>
-    <string name="detail_share_subject">Yamba message shared by </string>
+    <string name="detail_share_subject">Yamba message shared by\u0020</string>
+    <string name="detail_error_noemail">No email account available</string>
     
     <!-- UserInfo -->
     <string name="userInfo_title">Profile</string>

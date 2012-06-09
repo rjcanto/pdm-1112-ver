@@ -93,7 +93,7 @@ public class TimelinePullService extends Service {
 			List<Twitter.Status> timeline = _app.twitter().getUserTimeline();
 			_app.timeline().insertStatus(timeline);
 			
-			sendNotification(timeline.size(), timeline.get(0).text) ;
+			sendNotification(timeline.size(), timeline.get(timeline.size()-1).text) ;
 			
 			_hMainThread.post(new Runnable() {
 				public void run() {
@@ -136,12 +136,17 @@ public class TimelinePullService extends Service {
 	 */
 	private void sendNotification(int nStatusRetrieved, String lastStatusText) {
 		Context context = getApplicationContext();
-		CharSequence contentTitle = "My notification";
-		CharSequence contentText = "Hello World!"; //TODO replace by lastStatusText?
 		Intent notificationIntent = new Intent(this, TimelineActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-		_notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+		_notification.setLatestEventInfo(
+				context, 
+				(nStatusRetrieved==1)?  
+						nStatusRetrieved + getString(R.string.tl_notification_title_one) :
+						nStatusRetrieved + getString(R.string.tl_notification_title_several), 
+				lastStatusText, 
+				contentIntent
+		);
 		final int HELLO_ID = 1;
 		_notificationManager.notify(HELLO_ID, _notification);
 	}

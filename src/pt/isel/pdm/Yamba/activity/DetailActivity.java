@@ -3,6 +3,7 @@ package pt.isel.pdm.Yamba.activity;
 import java.util.Date;
 
 import pt.isel.pdm.Yamba.R;
+import pt.isel.pdm.Yamba.util.Utils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -46,12 +47,16 @@ public class DetailActivity extends Activity{
 
 	
 	public void onClickShare(View v) {
-		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-		emailIntent.setType("plain/text"); 
-		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, detailTextMessage.getText());   
-		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, 
-				getString(R.string.detail_share_subject)+detailTextUser.getText()); 		
-		startActivity(emailIntent); 
+		try {
+			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+			emailIntent.setType("plain/text"); 
+			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, detailTextMessage.getText());   
+			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, 
+					getString(R.string.detail_share_subject)+detailTextUser.getText()); 		
+			startActivity(emailIntent);
+		} catch (android.content.ActivityNotFoundException e) {
+			Utils.showToast(getApplicationContext(), getString(R.string.detail_error_noemail));
+		}
 	}
 
 }
