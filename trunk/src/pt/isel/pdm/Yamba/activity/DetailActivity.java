@@ -33,16 +33,6 @@ public class DetailActivity extends Activity{
 		
 		TextView detailTextId = (TextView) findViewById(R.id.detail_textId);
 		detailTextId.setText(bundle.getString("detailTextId")) ;
-		
-		/*
-		ImageView imgShare = (ImageView) findViewById(R.id.imgShare);
-		imgShare.setOnClickListener(new View.OnClickListener() {
-
-			  public void onClick(View view) {
-			    // do stuff
-			  }
-
-		});*/
 	}
 
 	

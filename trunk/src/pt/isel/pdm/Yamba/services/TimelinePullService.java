@@ -69,6 +69,7 @@ public class TimelinePullService extends Service {
 				android.R.drawable.stat_notify_chat, 
 				getString(R.string.tl_notification_text), 
 				System.currentTimeMillis());
+		_notification.flags = Notification.DEFAULT_SOUND | Notification.FLAG_AUTO_CANCEL ;
 	}
 
 	@Override
@@ -137,6 +138,7 @@ public class TimelinePullService extends Service {
 	private void sendNotification(int nStatusRetrieved, String lastStatusText) {
 		Context context = getApplicationContext();
 		Intent notificationIntent = new Intent(this, TimelineActivity.class);
+		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) ;
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
 		_notification.setLatestEventInfo(
