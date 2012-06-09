@@ -3,6 +3,7 @@ package pt.isel.pdm.Yamba.activity;
 
 import pt.isel.pdm.Yamba.App;
 import pt.isel.pdm.Yamba.R;
+import pt.isel.pdm.Yamba.providers.PendingContract;
 import pt.isel.pdm.Yamba.providers.TimelineContract;
 import pt.isel.pdm.Yamba.services.TimelinePullService;
 import pt.isel.pdm.Yamba.util.GeneralMenu;
@@ -168,16 +169,25 @@ public class TimelineActivity
 		Cursor c = _app.timeline().getAllStatus();
 		Utils.Log(String.format("TimelineActivity.onTimelineRefreshed. Rows: %d", c.getCount()));
 		startManagingCursor(c);
-		
+		c.moveToFirst();
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				R.layout.timeline_item, //layout
 				c,
 				new String[] {TimelineContract.AUTHOR_NAME, TimelineContract.TEXT, TimelineContract.CREATED_AT },
 				new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime });
-		
+
 		adapter.setViewBinder(this);
 		setListAdapter(adapter);
-		
+		Utils.Log("AdapterCount: " + adapter.getCount());
+		Utils.Log("ListViewCount: " + getListView().getCount());
+		c.moveToFirst();
+        while (c.isAfterLast() == false) {
+        	Utils.Log(c.getString(c.getColumnIndex(TimelineContract._ID)));
+        	Utils.Log(c.getString(c.getColumnIndex(TimelineContract.AUTHOR_NAME)));
+        	Utils.Log(c.getString(c.getColumnIndex(TimelineContract.CREATED_AT)));
+        	Utils.Log(c.getString(c.getColumnIndex(TimelineContract.TEXT)));
+        	c.moveToNext();
+        }
 		//setListAdapter(new TimelineAdapter(_app, this, _c));
 		
 		/*
@@ -211,7 +221,8 @@ public class TimelineActivity
 		case R.id.tl_item_textTime:
 			// Convert timestamp to relative date
 			TextView statusAge = (TextView) view;
-			long createdAt = cursor.getLong(cursor.getColumnIndex(TimelineContract.CREATED_AT));		
+			long createdAt = cursor.getLong(cursor.getColumnIndex(TimelineContract.CREATED_AT));
+			Utils.Log("Created at: " + createdAt);
 			statusAge.setText(DateUtils.getRelativeTimeSpanString(createdAt));
 			break;
 		case R.id.tl_item_textMessage:
@@ -221,11 +232,11 @@ public class TimelineActivity
 			int previewChars = _app.prefs().previewChars(); 
 			int length = (previewChars > statusText.length()) ? statusText.length() : previewChars;
 			status.setText(statusText.substring(0, length));
+			Utils.Log("Text: " + statusText);
 			break;
 		default:
 			return false;
 		}
-		
 		return true;
 	}
 	
