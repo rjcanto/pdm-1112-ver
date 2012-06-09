@@ -2,8 +2,6 @@ package pt.isel.pdm.Yamba.util;
 
 import pt.isel.pdm.Yamba.App;
 import pt.isel.pdm.Yamba.R;
-import pt.isel.pdm.Yamba.R.id;
-import pt.isel.pdm.Yamba.R.menu;
 import pt.isel.pdm.Yamba.activity.PrefsActivity;
 import pt.isel.pdm.Yamba.activity.StatusActivity;
 import pt.isel.pdm.Yamba.activity.TimelineActivity;

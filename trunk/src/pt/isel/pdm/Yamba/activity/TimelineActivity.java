@@ -1,13 +1,8 @@
 package pt.isel.pdm.Yamba.activity;
 
-import java.util.Date;
-import java.util.List;
 
 import pt.isel.pdm.Yamba.App;
 import pt.isel.pdm.Yamba.R;
-import pt.isel.pdm.Yamba.R.id;
-import pt.isel.pdm.Yamba.R.layout;
-import pt.isel.pdm.Yamba.R.string;
 import pt.isel.pdm.Yamba.database.TimelineContract;
 import pt.isel.pdm.Yamba.services.TimelinePullService;
 import pt.isel.pdm.Yamba.util.GeneralMenu;
@@ -15,27 +10,19 @@ import pt.isel.pdm.Yamba.util.OnPreferenceChangeListener;
 import pt.isel.pdm.Yamba.util.Preferences;
 import pt.isel.pdm.Yamba.util.Utils;
 
-import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.Twitter.Status;
 
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -47,7 +34,7 @@ public class TimelineActivity
 	private App _app;
 	private GeneralMenu _generalMenu;
 	private SQLiteDatabase _db;
-	private Cursor _cursor;
+	//private Cursor _cursor;
 	private Intent _timelinePullServiceIntent;
 	
 	/**

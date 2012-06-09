@@ -2,8 +2,6 @@ package pt.isel.pdm.Yamba.activity;
 
 import pt.isel.pdm.Yamba.App;
 import pt.isel.pdm.Yamba.R;
-import pt.isel.pdm.Yamba.R.string;
-import pt.isel.pdm.Yamba.R.xml;
 import pt.isel.pdm.Yamba.util.Utils;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
