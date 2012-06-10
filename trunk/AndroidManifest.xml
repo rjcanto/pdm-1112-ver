@@ -50,8 +50,10 @@
 			<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 			</intent-filter>
 		</receiver>
-<!-- 		
-		<receiver android:name=".providers.WidgetProvider" >
+		
+		<receiver android:name=".widget.WidgetProvider" 
+		    	  android:label="@string/widget_label">
+		    
 		    <intent-filter>
 		        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 		        <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
@@ -63,7 +65,7 @@
 		        android:name="android.appwidget.provider"
 		        android:resource="@xml/widget_info" />
 		</receiver>
- -->
+
 	</application>
         
 </manifest>
