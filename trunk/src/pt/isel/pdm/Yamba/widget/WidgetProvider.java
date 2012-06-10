@@ -20,7 +20,7 @@ public class WidgetProvider extends AppWidgetProvider {
 		Cursor c = ctx.getContentResolver().query(TimelineProvider.TIMELINE_URI, null, null, null, null) ;
 		Utils.Log("WidgetProvider.onUpdate") ;
 		try {
-			if (c.moveToFirst()) {
+			if (c.moveToLast()) {
 				
 				CharSequence user = c.getString(c.getColumnIndex(TimelineContract.AUTHOR_NAME)) ;
 				CharSequence createdAt = DateUtils.getRelativeTimeSpanString(ctx, 
