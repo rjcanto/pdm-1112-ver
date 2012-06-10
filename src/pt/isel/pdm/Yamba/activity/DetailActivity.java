@@ -38,6 +38,7 @@ public class DetailActivity extends Activity{
 	
 	public void onClickShare(View v) {
 		try {
+			Utils.Log("DetailActivity.onClickShare") ;
 			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 			emailIntent.setType("plain/text"); 
 			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, detailTextMessage.getText());   
@@ -45,6 +46,7 @@ public class DetailActivity extends Activity{
 					getString(R.string.detail_share_subject)+detailTextUser.getText()); 		
 			startActivity(emailIntent);
 		} catch (android.content.ActivityNotFoundException e) {
+			Utils.Log("DetailActivity.onClickShare - Error:"+ e.toString()) ;
 			Utils.showToast(getApplicationContext(), getString(R.string.detail_error_noemail));
 		}
 	}
