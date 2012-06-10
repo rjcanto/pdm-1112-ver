@@ -14,53 +14,47 @@ import android.os.RemoteException;
 
 public class Timeline {
 
-	//private final Application _app;
 	private final ContentResolver _resolver;
-	Cursor timelineCursor;
+	private final ContentValues _values;
+	private final String[] _isReadColumn;
 	
 	public Timeline(Application app) {
-		//_app = app;
 		_resolver = app.getContentResolver();
-		
+		_values = new ContentValues();
+		_isReadColumn = new String[] { TimelineContract.IS_READ };
 	}
 	
-	/** Gets the latest retrieved timeline, if any. Safe to call on UI thread */
-	public synchronized Cursor getCachedTimeline() {
-		if (timelineCursor != null && timelineCursor.isClosed())
-			timelineCursor = null;
-		return timelineCursor;
-	}
 	
 	/** 
 	 * Creates a cursor to access all of the Status in the database. 
-	 * Don't call on UI thread 
+	 * Don't call on UI thread. 
 	 **/
 	public synchronized Cursor getTimeline() {
 		Utils.Log("Timeline.getAllStatus");
 		
-		return timelineCursor = _resolver.query(
+		return _resolver.query(
 				TimelineProvider.TIMELINE_URI,				
 				null, null, null,
 				TimelineContract.CREATED_AT + " DESC");
 	}
 	
 	/** Inserts a collection of Status into the database. Don't call on UI thread */
-	public synchronized void insertStatus(List<Status> timeline) {
+	public synchronized int insertStatus(List<Status> timeline) {
 		Utils.Log(String.format("Timeline.insertStatus (%d)", timeline.size()));
 		
+		int unread = getUnreadStatusCount();
 		ContentProviderClient client = _resolver.acquireContentProviderClient(TimelineProvider.AUTHORITY);
-		ContentValues values = new ContentValues();
 		
 		try {						
 			for (Status status : timeline) {
-				values.clear();
-				values.put(TimelineContract._ID, status.id);
-				values.put(TimelineContract.CREATED_AT, status.createdAt.getTime());
-				values.put(TimelineContract.AUTHOR_ID, status.user.id);
-				values.put(TimelineContract.AUTHOR_NAME, status.user.name);
-				values.put(TimelineContract.IS_READ, true);
-				values.put(TimelineContract.TEXT, status.text);
-				client.insert(TimelineProvider.TIMELINE_URI, values);
+				_values.clear();
+				_values.put(TimelineContract._ID, status.id);
+				_values.put(TimelineContract.CREATED_AT, status.createdAt.getTime());
+				_values.put(TimelineContract.AUTHOR_ID, status.user.id);
+				_values.put(TimelineContract.AUTHOR_NAME, status.user.name);
+				_values.put(TimelineContract.IS_READ, false);
+				_values.put(TimelineContract.TEXT, status.text);
+				client.insert(TimelineProvider.TIMELINE_URI, _values);
 			}
 		}
 		catch (RemoteException re) {
@@ -70,7 +64,7 @@ public class Timeline {
 			client.release();
 		}
 		
-		
+		return getUnreadStatusCount() - unread;
 	}
 	
 	public synchronized List<String> getPendingStatus() {
@@ -90,8 +84,25 @@ public class Timeline {
 	}
 	
 	public synchronized void insertPendingStatus(String msg) {
-		ContentValues values = new ContentValues();
-		values.put(PendingContract.TEXT, msg);
-		_resolver.insert(TimelineProvider.PENDING_URI, values);		
+		_values.clear();
+		_values.put(PendingContract.TEXT, msg);
+		_resolver.insert(TimelineProvider.PENDING_URI, _values);		
+	}
+	
+	public synchronized void setRead(long statusId) {
+		_values.clear();
+		_values.put(TimelineContract.IS_READ, true);
+		_resolver.update(TimelineProvider.TIMELINE_URI, _values, TimelineContract._ID + "=" + statusId, null);
+	}
+	
+	public synchronized int getUnreadStatusCount() {
+		
+		Cursor c = _resolver.query(
+				TimelineProvider.TIMELINE_URI,				
+				_isReadColumn, TimelineContract.IS_READ + "=0",
+				null, null);
+		int count = c.getCount();
+		c.close();
+		return count;
 	}
 }

@@ -40,6 +40,7 @@
             
        	<service android:name=".services.TimelinePullService" /> 
        	<service android:name=".services.StatusUploadService" />
+       	<service android:name=".services.DbService" />
        	<service 
            android:name=".services.UserInfoPullService"
            android:exported="false"

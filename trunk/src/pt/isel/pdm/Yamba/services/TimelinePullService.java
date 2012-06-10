@@ -15,6 +15,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -91,17 +92,19 @@ public class TimelinePullService extends Service {
 		Log.d(App.TAG, "TimelinePullService.retrieveTimeline");
 		try {
 			
-			List<Twitter.Status> timeline = _app.twitter().getUserTimeline();
-			
-			if (timeline.size() > 0) {
-				_app.timeline().insertStatus(timeline);
-				_app.timeline().getTimeline(); // Refresh cache
-				sendNotification(timeline.size(), timeline.get(timeline.size()-1).text) ;
+			if (_app.isNetworkAvailable()) {
+				List<Twitter.Status> timeline = _app.twitter().getUserTimeline();
+				int newStatusCount = _app.timeline().insertStatus(timeline);
+				if (newStatusCount > 0) {
+					int unread = _app.timeline().getUnreadStatusCount();
+					sendNotification(unread, timeline.get(0).text);
+				}
 			}
 			
+			final Cursor c = _app.timeline().getTimeline();
 			_hMainThread.post(new Runnable() {
 				public void run() {
-					_app.onServiceNewTimelineResult();
+					_app.onServiceNewTimelineResult(c);
 				}
 			});
 			
