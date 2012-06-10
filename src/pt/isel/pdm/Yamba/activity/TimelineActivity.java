@@ -7,7 +7,9 @@ import pt.isel.pdm.Yamba.providers.TimelineContract;
 import pt.isel.pdm.Yamba.services.DbService;
 import pt.isel.pdm.Yamba.services.TimelinePullService;
 import pt.isel.pdm.Yamba.util.*;
+import android.app.AlarmManager;
 import android.app.ListActivity;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,11 +30,14 @@ public class TimelineActivity
 	extends ListActivity
 	implements OnPreferenceChangeListener, ViewBinder, OnItemClickListener {
 
+	private final static int UNREAD_COLOR = 0xFFFFFFFF;
+	
 	private App _app;
 	private GeneralMenu _generalMenu;
 	private SQLiteDatabase _db;
 	private Cursor _cursor;
 	private Intent _timelinePullServiceIntent, _dbServiceIntent, _detailIntent;
+	
 	
 	/**
 	 * Android overrides
@@ -137,8 +142,12 @@ public class TimelineActivity
 			return;
 		}
 
-		Log.d(App.TAG, "TimelineActivity.refresh: Calling TimelinePullService");
-		startService(_timelinePullServiceIntent);
+		Log.d(App.TAG, "TimelineActivity.refresh: starting TimelinePullService");
+		
+		if (_app.prefs().autoRefresh()) {
+			_app.setAutoUpdate(0);
+		}
+		else startService(_timelinePullServiceIntent);
 	}
 
 	private boolean hasRequiredPreferences() {
@@ -202,8 +211,10 @@ public class TimelineActivity
 			// Limit number of preview chars
 			TextView status = (TextView) view;
 			boolean isRead = cursor.getInt(cursor.getColumnIndex(TimelineContract.IS_READ)) == 1;
-			if (!isRead)
+			if (!isRead) {
 				status.setTypeface(Typeface.DEFAULT_BOLD);
+				status.setTextColor(UNREAD_COLOR);				
+			}
 			String statusText = cursor.getString(cursor.getColumnIndex(TimelineContract.TEXT));
 			int previewChars = _app.prefs().previewChars(); 
 			int length = (previewChars > statusText.length()) ? statusText.length() : previewChars;

@@ -9,6 +9,7 @@ import pt.isel.pdm.Yamba.util.Utils;
 
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -57,7 +58,7 @@ public class TimelinePullService extends Service {
 		HandlerThread thread = new HandlerThread("ServiceStartArguments",
 				Process.THREAD_PRIORITY_BACKGROUND);
 		thread.start();
-
+		
 		// Get the HandlerThread's Looper and use it for our Handler
 		_serviceLooper = thread.getLooper();
 		_serviceHandler = new ServiceHandler(_serviceLooper);
@@ -71,6 +72,7 @@ public class TimelinePullService extends Service {
 				getString(R.string.tl_notification_text), 
 				System.currentTimeMillis());
 		_notification.flags = Notification.DEFAULT_SOUND | Notification.FLAG_AUTO_CANCEL ;
+		
 	}
 
 	@Override
@@ -124,13 +126,13 @@ public class TimelinePullService extends Service {
 			return;
 		}
 		
-		
+		/*
 		if (_app.prefs().autoRefresh()) {
 			_serviceHandler.removeMessages(CODE_AUTO_UPDATE);
 			_serviceHandler.sendMessageDelayed(
 					_serviceHandler.obtainMessage(CODE_AUTO_UPDATE),
 					_app.prefs().autoRefreshTime());
-		}
+		}*/
 	}
 
 	

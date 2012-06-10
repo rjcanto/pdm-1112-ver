@@ -84,7 +84,7 @@ public final class Preferences implements OnSharedPreferenceChangeListener {
 	public String url() { return _prefs.getString("url", ""); }
 	
 	/** Returns the auto refresh time preference value */
-	public int autoRefreshTime() { return Integer.parseInt(_prefs.getString("autoRefreshTime", "-1")); }
+	public int autoRefreshTime() { return 10000 /*Integer.parseInt(_prefs.getString("autoRefreshTime", "-1"))*/; }
 	
 	/** Returns true if auto refresh is active, otherwise is false */
 	public boolean autoRefresh() {return _prefs.getBoolean("autoRefresh",false);}

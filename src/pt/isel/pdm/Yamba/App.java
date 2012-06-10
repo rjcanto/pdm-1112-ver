@@ -10,7 +10,9 @@ import pt.isel.pdm.Yamba.util.Utils;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.Status;
 import winterwell.jtwitter.TwitterException;
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,10 +26,11 @@ public class App extends Application implements OnPreferenceChangeListener {
 	public static final String TAG = "PDM";
 	private Preferences _prefs;
 	private Twitter _twitter;
-	//private PdmDb _pdmDb;
 	private Timeline _timeline;
 	private ConnectivityManager _connMan = null;
 	private NetworkInfo _netInfo = null;
+	private PendingIntent _alarmIntent;
+	private AlarmManager _alarmManager;
 
 	/**
 	 * Shared state
@@ -47,8 +50,12 @@ public class App extends Application implements OnPreferenceChangeListener {
 		isPendingStatus = false ;
 		_prefs = new Preferences(getApplicationContext());
 		_prefs.registerOnPreferenceChangeListener(this);
-		//_pdmDb = new PdmDb(this);
 		_timeline = new Timeline(this);
+		
+		_alarmIntent = PendingIntent.getService(this, -1,
+				new Intent(this, TimelinePullService.class),
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		_alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 	}
 	
 	/** Returns the content provider adapter */
@@ -74,6 +81,19 @@ public class App extends Application implements OnPreferenceChangeListener {
 		
 		if (key.equals("maxPosts") && _twitter != null) {
 			_twitter.setCount(_prefs.maxPosts());
+			return;
+		}
+		
+		if (key.equals("autoRefresh") || key.equals("autoRefreshTime") && timelineRetrieved) {
+			if (prefs().autoRefresh()) {
+				Utils.Log("App.onPreferenceChanged: setting alarm");
+				setAutoUpdate(prefs().autoRefreshTime());
+			}
+			else {
+				Utils.Log("App.onPreferenceChanged: cancelling alarm");
+				_alarmManager.cancel(_alarmIntent);
+			}
+			
 			return;
 		}
 	}
@@ -121,5 +141,11 @@ public class App extends Application implements OnPreferenceChangeListener {
 			_connMan = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE) ;
 		_netInfo = _connMan.getActiveNetworkInfo();
 		return _netInfo!=null && _netInfo.isConnected();
+	}
+	
+	public void setAutoUpdate(long startIn) {
+		_alarmManager.setInexactRepeating(
+				AlarmManager.ELAPSED_REALTIME, startIn,
+				prefs().autoRefreshTime(),	_alarmIntent);
 	}
 }
