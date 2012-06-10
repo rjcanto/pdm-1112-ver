@@ -189,9 +189,27 @@ public class TimelineProvider extends ContentProvider {
 	}
 
 	@Override
-	public int update(Uri uri, ContentValues values, String selection,
-			String[] selectionArgs) {
-		throw new UnsupportedOperationException("update unsupported for the supplied URI");
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+		Utils.Log("TimelineProvider.update(). Uri: " + uri.toString());
+		SQLiteDatabase db = _dbHelper.getWritableDatabase();
+		
+		int count;
+		switch (uriMatcher.match(uri)) {
+		
+		case TIMELINE_ALL:
+			count = db.update(TimelineContract.TABLE, values, selection, selectionArgs);
+			_dbHelper.close();
+			break;
+			
+		default:
+			_dbHelper.close();
+			throw new IllegalArgumentException("Unsupported URI: " + uri);
+		}
+		
+		if (count > 0)			
+			getContext().getContentResolver().notifyChange(uri, null);
+		
+		return count;
 	}
 
 }

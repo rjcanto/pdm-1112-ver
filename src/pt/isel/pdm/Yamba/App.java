@@ -14,6 +14,7 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -54,9 +55,6 @@ public class App extends Application implements OnPreferenceChangeListener {
 	public Timeline timeline() {
 		return _timeline;
 	}
-	/*public PdmDb db() {
-		return _pdmDb;
-	}*/
 	
 	/** Returns the Preferences object */
 	public Preferences prefs() {
@@ -80,10 +78,10 @@ public class App extends Application implements OnPreferenceChangeListener {
 		}
 	}
 	
-	public void onServiceNewTimelineResult() {
+	public void onServiceNewTimelineResult(Cursor c) {
 		timelineRetrieved = true;
-		if(timelineAct != null)
-			timelineAct.onTimelineRefreshed();
+		if (timelineAct != null)
+			timelineAct.onTimelineRefreshed(c);
 	}
 	
 	public void onServiceNewStatusSent(Status status) {

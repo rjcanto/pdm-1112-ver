@@ -4,12 +4,14 @@ package pt.isel.pdm.Yamba.activity;
 import pt.isel.pdm.Yamba.App;
 import pt.isel.pdm.Yamba.R;
 import pt.isel.pdm.Yamba.providers.TimelineContract;
+import pt.isel.pdm.Yamba.services.DbService;
 import pt.isel.pdm.Yamba.services.TimelinePullService;
 import pt.isel.pdm.Yamba.util.*;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -30,7 +32,7 @@ public class TimelineActivity
 	private GeneralMenu _generalMenu;
 	private SQLiteDatabase _db;
 	private Cursor _cursor;
-	private Intent _timelinePullServiceIntent;
+	private Intent _timelinePullServiceIntent, _dbServiceIntent, _detailIntent;
 	
 	/**
 	 * Android overrides
@@ -48,7 +50,8 @@ public class TimelineActivity
 		getListView().setOnItemClickListener(this);
 				
 		_timelinePullServiceIntent = new Intent(this, TimelinePullService.class);
-		//onTaskDone() ;
+		_dbServiceIntent = new Intent(this, DbService.class);
+		_detailIntent = new Intent(this, DetailActivity.class);
 	}
 	
 	
@@ -82,8 +85,10 @@ public class TimelineActivity
 		
 		if (!_app.timelineRetrieved)
 			refresh();
-		else
-			onTimelineRefreshed();
+		else {
+			_dbServiceIntent.putExtra(DbService.EXTRA_ACTIONS, DbService.ACTION_REFRESH_TIMELINE);
+			startService(_dbServiceIntent);
+		}
 	}
 	
 	@Override
@@ -147,26 +152,25 @@ public class TimelineActivity
 	}
 			
 	//new onTaskDone to work with TimelinePullService
-	public void onTimelineRefreshed() {
+	public void onTimelineRefreshed(Cursor c) {
 		
-		_cursor = _app.timeline().getCachedTimeline();
-		if (_cursor == null) {
+		if (c == null) {
 			Utils.Log("TimelineActivity.onTimelineRefreshed. Cache miss!");
 			return;
 		}
 		
-		Utils.Log(String.format("TimelineActivity.onTimelineRefreshed. Rows: %d", _cursor.getCount()));
+		Utils.Log(String.format("TimelineActivity.onTimelineRefreshed. Rows: %d", c.getCount()));
 
 		if (_app.timelineAdapter == null) {
 			_app.timelineAdapter = new SimpleCursorAdapter(this,
 				R.layout.timeline_item, //layout
-				_cursor,
+				c,
 				new String[] {TimelineContract.AUTHOR_NAME, TimelineContract.TEXT, TimelineContract.CREATED_AT },
 				new int[] {R.id.tl_item_textUser, R.id.tl_item_textMessage, R.id.tl_item_textTime });
 			_app.timelineAdapter.setViewBinder(this);
 		}
 		else
-			_app.timelineAdapter.changeCursor(_cursor); // Closes previous cursor
+			_app.timelineAdapter.changeCursor(c); // Closes previous cursor
 
 		setListAdapter(_app.timelineAdapter);
 		
@@ -197,6 +201,9 @@ public class TimelineActivity
 		case R.id.tl_item_textMessage:
 			// Limit number of preview chars
 			TextView status = (TextView) view;
+			boolean isRead = cursor.getInt(cursor.getColumnIndex(TimelineContract.IS_READ)) == 1;
+			if (!isRead)
+				status.setTypeface(Typeface.DEFAULT_BOLD);
 			String statusText = cursor.getString(cursor.getColumnIndex(TimelineContract.TEXT));
 			int previewChars = _app.prefs().previewChars(); 
 			int length = (previewChars > statusText.length()) ? statusText.length() : previewChars;
@@ -208,20 +215,28 @@ public class TimelineActivity
 		return true;
 	}
 	
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position, long rowId) {
 		Log.d(App.TAG, "TimelineAdapter.onItemClick");
 		
 		// Show clicked status in DetailActivity
 		Cursor c = (Cursor) parent.getItemAtPosition(position);
+		long id = c.getLong(c.getColumnIndex(TimelineContract._ID));
 		
-		Intent intent = new Intent(this, DetailActivity.class);
-		intent.putExtra("detailTextUser", c.getString(c.getColumnIndex(TimelineContract.AUTHOR_NAME)));
-		intent.putExtra("detailTextMessage", c.getString(c.getColumnIndex(TimelineContract.TEXT)));
-		intent.putExtra("detailTextTime",  c.getLong(c.getColumnIndex(TimelineContract.CREATED_AT)));
-		intent.putExtra("detailTextId", "#" + c.getLong(c.getColumnIndex(TimelineContract._ID)));
+		boolean isRead = c.getInt(c.getColumnIndex(TimelineContract.IS_READ)) == 1;
+		if (!isRead) {
+			// Mark as read
+			_dbServiceIntent.putExtra(DbService.EXTRA_ACTIONS, DbService.ACTION_SET_STATUS_READ);
+			_dbServiceIntent.putExtra(DbService.EXTRA_ID, id);
+			startService(_dbServiceIntent);
+		}
 		
-		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);		
-		startActivity(intent);		
+		_detailIntent.putExtra("detailTextUser", c.getString(c.getColumnIndex(TimelineContract.AUTHOR_NAME)));
+		_detailIntent.putExtra("detailTextMessage", c.getString(c.getColumnIndex(TimelineContract.TEXT)));
+		_detailIntent.putExtra("detailTextTime",  c.getLong(c.getColumnIndex(TimelineContract.CREATED_AT)));
+		_detailIntent.putExtra("detailTextId", "#" + id);
+		
+		_detailIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);		
+		startActivity(_detailIntent);		
 	}
 
 	public void onPreferenceChanged(Preferences prefs, String key, boolean sessionInvalidated) {
