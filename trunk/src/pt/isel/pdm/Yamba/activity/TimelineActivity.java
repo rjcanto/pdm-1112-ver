@@ -68,7 +68,7 @@ public class TimelineActivity
 		
 		if (isFinishing()) {
 			Log.d(App.TAG, "TimelineActivity is finishing");
-			if (_cursor != null)
+			if (_cursor != null && !_cursor.isClosed())
 				_cursor.close();
 			_app.timelineRetrieved = false;
 			stopService(new Intent(this, TimelinePullService.class));
@@ -167,10 +167,7 @@ public class TimelineActivity
 	//new onTaskDone to work with TimelinePullService
 	public void onTimelineRefreshed(Cursor c) {
 		
-		if (c == null) {
-			Utils.Log("TimelineActivity.onTimelineRefreshed. Cache miss!");
-			return;
-		}
+		_cursor = c;
 		
 		Utils.Log(String.format("TimelineActivity.onTimelineRefreshed. Rows: %d", c.getCount()));
 
