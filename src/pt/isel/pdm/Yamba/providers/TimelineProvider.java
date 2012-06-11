@@ -177,6 +177,11 @@ public class TimelineProvider extends ContentProvider {
 			_dbHelper.close();
 			break;
 			
+		case TIMELINE_ALL:
+			count = db.delete(TimelineContract.TABLE, selection, selectionArgs);
+			_dbHelper.close();
+			break;
+			
 		default:
 			_dbHelper.close();
 			throw new IllegalArgumentException("Unsupported URI: " + uri);

@@ -16,12 +16,14 @@ public class Timeline {
 
 	private final ContentResolver _resolver;
 	private final ContentValues _values;
-	private final String[] _isReadColumn;
+	private final String[] _isReadColumn, _maxIdColumn, _idColumn;
 	
 	public Timeline(Application app) {
 		_resolver = app.getContentResolver();
 		_values = new ContentValues();
 		_isReadColumn = new String[] { TimelineContract.IS_READ };
+		_maxIdColumn = new String[] { String.format("max(%s)", TimelineContract._ID) };
+		_idColumn = new String[] { TimelineContract._ID };
 	}
 	
 	
@@ -42,7 +44,6 @@ public class Timeline {
 	public synchronized int insertStatus(List<Status> timeline) {
 		Utils.Log(String.format("Timeline.insertStatus (%d)", timeline.size()));
 		
-		int unread = getUnreadStatusCount();
 		ContentProviderClient client = _resolver.acquireContentProviderClient(TimelineProvider.AUTHORITY);
 		
 		try {						
@@ -64,10 +65,11 @@ public class Timeline {
 			client.release();
 		}
 		
-		return getUnreadStatusCount() - unread;
+		return timeline.size();
 	}
 	
 	public synchronized List<String> getPendingStatus() {
+		Utils.Log("Timeline.getPendingStatus");
 		List<String> result = new ArrayList<String>();
 		
 		Cursor statusCursor = _resolver.query(TimelineProvider.PENDING_URI,
@@ -84,19 +86,21 @@ public class Timeline {
 	}
 	
 	public synchronized void insertPendingStatus(String msg) {
+		Utils.Log("Timeline.insertPendingStatus");
 		_values.clear();
 		_values.put(PendingContract.TEXT, msg);
 		_resolver.insert(TimelineProvider.PENDING_URI, _values);		
 	}
 	
 	public synchronized void setRead(long statusId) {
+		Utils.Log("Timeline.setRead");
 		_values.clear();
 		_values.put(TimelineContract.IS_READ, true);
 		_resolver.update(TimelineProvider.TIMELINE_URI, _values, TimelineContract._ID + "=" + statusId, null);
 	}
 	
 	public synchronized int getUnreadStatusCount() {
-		
+		Utils.Log("Timeline.getUnreadStatusCount");
 		Cursor c = _resolver.query(
 				TimelineProvider.TIMELINE_URI,				
 				_isReadColumn, TimelineContract.IS_READ + "=0",
@@ -104,5 +108,38 @@ public class Timeline {
 		int count = c.getCount();
 		c.close();
 		return count;
+	}
+	
+	public synchronized Long getMostRecentStatusId() {
+		Utils.Log("Timeline.getMostRecentStatusId");
+		Cursor c = _resolver.query(
+				TimelineProvider.TIMELINE_URI,				
+				_maxIdColumn, null,	null, null);
+		c.moveToFirst();
+		
+		if (c.isAfterLast())
+			return null;
+
+		long id = c.getLong(0);
+		c.close();
+		return id;
+	}
+	
+	public synchronized void deleteOlderMessages(int keepLatest) {
+		Utils.Log("Timeline.deleteOlderMessages");		
+		Cursor c = _resolver.query(
+				TimelineProvider.TIMELINE_URI,				
+				_idColumn,
+				null, null,
+				String.format("%s DESC LIMIT 1 OFFSET %d", TimelineContract.CREATED_AT, keepLatest));
+				
+		c.moveToFirst();
+		if (c.isAfterLast())
+			return;
+		
+		long id = c.getLong(0);
+		c.close();
+		
+		_resolver.delete(TimelineProvider.TIMELINE_URI, String.format("%s <= %d", TimelineContract._ID, id), null);
 	}
 }

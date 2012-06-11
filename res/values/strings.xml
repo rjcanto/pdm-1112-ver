@@ -38,8 +38,9 @@
     <string name="autoRefreshTitle">Automatic refresh</string>    
     <string name="autoRefreshTimeTitle">Refresh period</string>
 	<string name="autoRefreshTimeSum">Time to refresh timeline automatically</string>
-    <string name="maxPostsStoredTitle"></string>
-    <string name="maxPostsStoredSum"></string>
+    <string name="maxPostsStoredTitle">Number of stored messages</string>
+    <string name="maxPostsStoredSum">Maximum number of stored messages</string>
+    
 
     
     <!-- Menu strings -->
