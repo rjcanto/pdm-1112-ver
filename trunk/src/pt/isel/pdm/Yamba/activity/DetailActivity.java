@@ -1,5 +1,8 @@
 package pt.isel.pdm.Yamba.activity;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.Date;
 
 import pt.isel.pdm.Yamba.R;
@@ -7,16 +10,26 @@ import pt.isel.pdm.Yamba.util.Utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import winterwell.jtwitter.Twitter;
+
+import pt.isel.pdm.Yamba.App;
 
 public class DetailActivity extends Activity{
 	TextView detailTextMessage ;
 	TextView detailTextUser ;
+	ImageView detailUserImage ;
+	App _app;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		_app = (App) getApplication() ;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail);
 		Bundle bundle = getIntent().getExtras();
@@ -33,6 +46,20 @@ public class DetailActivity extends Activity{
 		
 		TextView detailTextId = (TextView) findViewById(R.id.detail_textId);
 		detailTextId.setText(bundle.getString("detailTextId")) ;
+		
+		detailUserImage = (ImageView) findViewById(R.id.detail_userImage) ;
+		try {
+			Twitter.User _twUser = _app.twitter().getUser(bundle.getString("detailTextUser")) ;
+			InputStream imageSrc;
+			imageSrc = _twUser.getProfileImageUrl().toURL().openStream();
+			detailUserImage.setImageBitmap((Bitmap) BitmapFactory.decodeStream(imageSrc));					
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}					
 	}
 
 	

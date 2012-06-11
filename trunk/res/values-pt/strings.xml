@@ -80,6 +80,7 @@
     <string name="detail_imgdesc">Partilha esta mensagem</string>
     <string name="detail_share_subject">Mensagem Yamba partilhada por\u0020</string>
     <string name="detail_error_noemail">Não existe conta de email disponível</string>
+    <string name="detail_user_image">Imagem de perfil do utilizador</string>
    
     <!-- User Info -->
     <string name="userInfo_title">Perfil</string>

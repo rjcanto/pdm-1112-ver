@@ -184,12 +184,6 @@ public class TimelineActivity
 
 		setListAdapter(_app.timelineAdapter);
 		
-		/*
-		if (_app.progressDialog != null &&_app.progressDialog.isShowing()) {
-			_app.progressDialog.dismiss();
-			_app.progressDialog = null;
-        }
-		*/
 	}
 	
 	
@@ -254,19 +248,13 @@ public class TimelineActivity
 	public void onPreferenceChanged(Preferences prefs, String key, boolean sessionInvalidated) {
 		Log.d(App.TAG, "TimelineActivity.onPreferenceChanged");
 		if (sessionInvalidated) {
-			//_app.statusAdapter = null;
 			_app.timelineRetrieved = false;
 			return;
 		}
-		/*if (key.equals("maxPosts")) {
-			_app.twitter().setCount(prefs.maxPosts());
-			return;
-		}*/
 		
 		if (key.equals("previewChars")) {
 			SimpleCursorAdapter adapter = (SimpleCursorAdapter) getListAdapter();
 			adapter.notifyDataSetChanged();
-			//_app.statusAdapter.notifyDataSetChanged();
 		}
 	}
 	

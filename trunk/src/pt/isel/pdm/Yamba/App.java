@@ -107,12 +107,7 @@ public class App extends Application implements OnPreferenceChangeListener {
 	
 	public void onServiceNewStatusSent(Status status) {
 		sendingStatus = false;
-//		if (status != null) {
-//			_timelineResult.add(0, status);
-//			statusAdapter.notifyDataSetChanged();
-//		}
-		//if (statusAct != null)
-			statusAct.onStatusSent(status);
+		statusAct.onStatusSent(status);
 	}
 	
 	/** Returns the Twitter object */ 
@@ -149,5 +144,9 @@ public class App extends Application implements OnPreferenceChangeListener {
 		_alarmManager.setInexactRepeating(
 				AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + startIn,
 				prefs().autoRefreshTime(),	_alarmIntent);
+	}
+	
+	public void stopAutoUpdate() {
+		_alarmManager.cancel(_alarmIntent);
 	}
 }
