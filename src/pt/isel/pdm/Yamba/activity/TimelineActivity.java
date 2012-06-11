@@ -6,7 +6,10 @@ import pt.isel.pdm.Yamba.R;
 import pt.isel.pdm.Yamba.providers.TimelineContract;
 import pt.isel.pdm.Yamba.services.DbService;
 import pt.isel.pdm.Yamba.services.TimelinePullService;
-import pt.isel.pdm.Yamba.util.*;
+import pt.isel.pdm.Yamba.util.GeneralMenu;
+import pt.isel.pdm.Yamba.util.OnPreferenceChangeListener;
+import pt.isel.pdm.Yamba.util.Preferences;
+import pt.isel.pdm.Yamba.util.Utils;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -88,10 +91,8 @@ public class TimelineActivity
 		
 		if (!_app.timelineRetrieved)
 			refresh();
-		else {
-			_dbServiceIntent.putExtra(DbService.EXTRA_ACTIONS, DbService.ACTION_REFRESH_TIMELINE);
-			startService(_dbServiceIntent);
-		}
+		else
+			refreshFromDB();		
 	}
 	
 	@Override
@@ -131,6 +132,11 @@ public class TimelineActivity
 	/**
 	 * Aux methods
 	 */
+	
+	public void refreshFromDB() {
+		_dbServiceIntent.putExtra(DbService.EXTRA_ACTIONS, DbService.ACTION_REFRESH_TIMELINE);
+		startService(_dbServiceIntent);
+	}
 	
 	public void refresh() {
 		Log.d(App.TAG, "TimelineActivity.refresh");

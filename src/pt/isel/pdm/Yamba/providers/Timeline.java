@@ -31,13 +31,13 @@ public class Timeline {
 	 * Creates a cursor to access all of the Status in the database. 
 	 * Don't call on UI thread. 
 	 **/
-	public synchronized Cursor getTimeline() {
+	public synchronized Cursor getTimeline(int count) {
 		Utils.Log("Timeline.getAllStatus");
 		
 		return _resolver.query(
 				TimelineProvider.TIMELINE_URI,				
 				null, null, null,
-				TimelineContract.CREATED_AT + " DESC");
+				String.format("%s DESC LIMIT %d", TimelineContract.CREATED_AT, count));
 	}
 	
 	/** Inserts a collection of Status into the database. Don't call on UI thread */
