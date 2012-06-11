@@ -145,6 +145,13 @@ public class App extends Application implements OnPreferenceChangeListener {
 		return _netInfo!=null && _netInfo.isConnected();
 	}
 	
+	public boolean isWifiAvailable() {
+		NetworkInfo nt = ((ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() ;
+		return (( nt != null) 
+				&& (nt.getType() == ConnectivityManager.TYPE_WIFI)
+				&& nt.isConnected()) ;
+	}
+	
 	/** Start auto-updating in startIn seconds.*/
 	public void setAutoUpdate(long startIn) {
 		_alarmManager.setInexactRepeating(

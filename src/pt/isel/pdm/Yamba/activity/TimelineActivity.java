@@ -7,15 +7,12 @@ import pt.isel.pdm.Yamba.providers.TimelineContract;
 import pt.isel.pdm.Yamba.services.DbService;
 import pt.isel.pdm.Yamba.services.TimelinePullService;
 import pt.isel.pdm.Yamba.util.*;
-import android.app.AlarmManager;
 import android.app.ListActivity;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -145,7 +142,7 @@ public class TimelineActivity
 
 		Log.d(App.TAG, "TimelineActivity.refresh: starting TimelinePullService");
 		
-		if (_app.prefs().autoRefresh()) {
+		if (_app.prefs().autoRefresh() && _app.isWifiAvailable()) {
 			_app.setAutoUpdate(0);
 		}
 		else startService(_timelinePullServiceIntent);
