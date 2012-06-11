@@ -68,6 +68,12 @@ public final class Preferences implements OnSharedPreferenceChangeListener {
 		return maxPosts.equals("") ? MAX_POSTS : Integer.parseInt(maxPosts);		
 	}
 	
+	/** Returns the maxPostsStored preference value */
+	public int maxPostsStored() {
+		String maxPostsStored = _prefs.getString("maxPostsStored", Integer.toString(MAX_POSTS));		
+		return maxPostsStored.equals("") ? MAX_POSTS : Integer.parseInt(maxPostsStored);		
+	}
+	
 	/** Returns the previewChars preference value */
 	public int previewChars() {
 		String previewChars = _prefs.getString("previewChars", Integer.toString(PREVIEW_CHARS));		
@@ -84,7 +90,7 @@ public final class Preferences implements OnSharedPreferenceChangeListener {
 	public String url() { return _prefs.getString("url", ""); }
 	
 	/** Returns the auto refresh time preference value */
-	public int autoRefreshTime() { return 10000 /*Integer.parseInt(_prefs.getString("autoRefreshTime", "-1"))*/; }
+	public int autoRefreshTime() { return Integer.parseInt(_prefs.getString("autoRefreshTime", "-1")); }
 	
 	/** Returns true if auto refresh is active, otherwise is false */
 	public boolean autoRefresh() {return _prefs.getBoolean("autoRefresh",false);}

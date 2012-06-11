@@ -43,6 +43,7 @@ public class App extends Application implements OnPreferenceChangeListener {
 	public boolean sendingStatus;
 	public boolean timelineRetrieved;
 	public boolean isPendingStatus;
+	public Long mostRecentStatusId = null;
 	
 	@Override
 	public void onCreate() {
@@ -82,6 +83,11 @@ public class App extends Application implements OnPreferenceChangeListener {
 		
 		if (key.equals("maxPosts") && _twitter != null) {
 			_twitter.setCount(_prefs.maxPosts());
+			return;
+		}
+		
+		if (key.equals("maxPostsStored") && _twitter != null) {
+			mostRecentStatusId = null;
 			return;
 		}
 		
