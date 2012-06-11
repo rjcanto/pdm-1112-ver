@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.SimpleCursorAdapter;
 
@@ -143,9 +144,10 @@ public class App extends Application implements OnPreferenceChangeListener {
 		return _netInfo!=null && _netInfo.isConnected();
 	}
 	
+	/** Start auto-updating in startIn seconds.*/
 	public void setAutoUpdate(long startIn) {
 		_alarmManager.setInexactRepeating(
-				AlarmManager.ELAPSED_REALTIME, startIn,
+				AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + startIn,
 				prefs().autoRefreshTime(),	_alarmIntent);
 	}
 }
