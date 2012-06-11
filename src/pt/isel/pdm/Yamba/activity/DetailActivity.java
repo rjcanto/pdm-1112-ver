@@ -59,7 +59,9 @@ public class DetailActivity extends Activity{
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}					
+		} catch (RuntimeException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	
