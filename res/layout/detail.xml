@@ -10,6 +10,13 @@
         android:layout_margin="10dp" android:gravity="center"
         android:text="@string/detail_title" android:textSize="32sp"
         android:textColor="#d6d6d6"/>
+    
+    <ImageView
+        android:id="@+id/detail_userImage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:contentDescription="@string/detail_user_image"
+        android:gravity="center" />
         <TextView
         android:id="@+id/detail_textUser"
         android:layout_width="match_parent"

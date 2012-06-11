@@ -2,14 +2,6 @@ package pt.isel.pdm.Yamba.services;
 
 import java.util.List;
 
-import pt.isel.pdm.Yamba.App;
-import pt.isel.pdm.Yamba.R;
-import pt.isel.pdm.Yamba.activity.TimelineActivity;
-import pt.isel.pdm.Yamba.util.Utils;
-
-import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.TwitterException;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,6 +16,13 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.util.Log;
+
+import pt.isel.pdm.Yamba.App;
+import pt.isel.pdm.Yamba.R;
+import pt.isel.pdm.Yamba.activity.TimelineActivity;
+import pt.isel.pdm.Yamba.util.Utils;
+import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.TwitterException;
 
 public class TimelinePullService extends Service {
 	private App _app;
