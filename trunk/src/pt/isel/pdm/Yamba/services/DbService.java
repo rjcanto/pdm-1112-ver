@@ -43,7 +43,10 @@ public class DbService extends IntentService {
 		
 		if ((actions & ACTION_REFRESH_TIMELINE) == ACTION_REFRESH_TIMELINE) {
 			Log.d(App.TAG, "DbService.onHandleIntent ACTION_REFRESH_TIMELINE");
-			final Cursor c = _app.timeline().getTimeline();
+			
+			_app.timeline().deleteOlderMessages(_app.prefs().maxPostsStored());
+			
+			final Cursor c = _app.timeline().getTimeline(_app.prefs().maxPosts());
 			
 			_hMainThread.post(new Runnable() {
 				public void run() {

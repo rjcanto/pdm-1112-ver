@@ -73,7 +73,7 @@ public class TimelinePullService extends IntentService {
 			
 			_app.timeline().deleteOlderMessages(_app.prefs().maxPostsStored());
 			
-			final Cursor c = _app.timeline().getTimeline();			
+			final Cursor c = _app.timeline().getTimeline(_app.prefs().maxPosts());			
 			
 			_hMainThread.post(new Runnable() {
 				public void run() {
